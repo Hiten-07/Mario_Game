@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Super Mario Style Game</title>
+    <title>Human Platform Game</title>
 
     <style>
         * {
@@ -21,7 +21,7 @@
         }
 
         /* =====================================================
-            GAME
+           GAME
         ===================================================== */
 
         #game {
@@ -31,14 +31,16 @@
             position: relative;
             overflow: hidden;
 
-            background: linear-gradient(to bottom,
-                    #35aef5 0%,
-                    #74d2ff 45%,
-                    #bdeeff 100%);
+            background: linear-gradient(
+                to bottom,
+                #35aef5 0%,
+                #74d2ff 45%,
+                #bdeeff 100%
+            );
         }
 
         /* =====================================================
-            WORLD
+           WORLD
         ===================================================== */
 
         #world {
@@ -54,7 +56,7 @@
         }
 
         /* =====================================================
-            CLOUDS
+           CLOUDS
         ===================================================== */
 
         .cloud {
@@ -63,11 +65,17 @@
             width: 150px;
             height: 48px;
 
-            background: linear-gradient(to bottom, #ffffff, #e8f7ff);
+            background: linear-gradient(
+                to bottom,
+                #ffffff,
+                #e8f7ff
+            );
 
             border-radius: 50px;
 
-            filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.08));
+            filter: drop-shadow(
+                0 8px 6px rgba(0, 0, 0, 0.08)
+            );
 
             opacity: 0.92;
         }
@@ -105,13 +113,13 @@
         }
 
         /* =====================================================
-            PLAYER
+           PLAYER - HUMAN
         ===================================================== */
 
         #player {
             position: absolute;
 
-            width: 78px;
+            width: 58px;
             height: 105px;
 
             z-index: 50;
@@ -120,30 +128,202 @@
 
             transform-origin: center bottom;
 
-            filter: drop-shadow(0 9px 6px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(
+                0 9px 6px rgba(0, 0, 0, 0.3)
+            );
 
             will-change: transform, left, top;
         }
 
-        #player img {
-            width: 100%;
-            height: 100%;
+        /* Hair */
 
-            object-fit: contain;
+        #player .hair {
+            position: absolute;
 
-            display: block;
+            width: 35px;
+            height: 17px;
 
-            user-select: none;
-            pointer-events: none;
+            background: #241a16;
+
+            border-radius: 18px 18px 6px 6px;
+
+            top: 0;
+            left: 12px;
+
+            z-index: 4;
         }
 
-        /* Walking effect */
+        /* Head */
+
+        #player .head {
+            position: absolute;
+
+            width: 32px;
+            height: 34px;
+
+            background: #f2b58d;
+
+            border: 2px solid #9b5d3d;
+
+            border-radius: 50%;
+
+            top: 7px;
+            left: 13px;
+
+            z-index: 3;
+        }
+
+        /* Eyes */
+
+        #player .eye {
+            position: absolute;
+
+            width: 4px;
+            height: 5px;
+
+            background: #222;
+
+            border-radius: 50%;
+
+            top: 14px;
+
+            z-index: 5;
+        }
+
+        #player .eye.left {
+            left: 7px;
+        }
+
+        #player .eye.right {
+            right: 7px;
+        }
+
+        /* Body / Shirt */
+
+        #player .body {
+            position: absolute;
+
+            width: 38px;
+            height: 42px;
+
+            background: #2878d0;
+
+            border: 2px solid #174b85;
+
+            border-radius: 10px 10px 5px 5px;
+
+            top: 36px;
+            left: 10px;
+
+            z-index: 2;
+        }
+
+        /* Arms */
+
+        #player .arm {
+            position: absolute;
+
+            width: 11px;
+            height: 38px;
+
+            background: #f2b58d;
+
+            border: 2px solid #9b5d3d;
+
+            border-radius: 10px;
+
+            top: 38px;
+
+            z-index: 1;
+        }
+
+        #player .arm.left {
+            left: 2px;
+            transform: rotate(12deg);
+        }
+
+        #player .arm.right {
+            right: 2px;
+            transform: rotate(-12deg);
+        }
+
+        /* Pants */
+
+        #player .pants {
+            position: absolute;
+
+            width: 40px;
+            height: 25px;
+
+            background: #303b91;
+
+            border: 2px solid #202760;
+
+            border-radius: 3px;
+
+            top: 75px;
+            left: 9px;
+
+            z-index: 2;
+        }
+
+        /* Legs */
+
+        #player .leg {
+            position: absolute;
+
+            width: 12px;
+            height: 28px;
+
+            background: #303b91;
+
+            border-radius: 5px;
+
+            top: 91px;
+
+            z-index: 1;
+        }
+
+        #player .leg.left {
+            left: 14px;
+        }
+
+        #player .leg.right {
+            right: 14px;
+        }
+
+        /* Shoes */
+
+        #player .shoe {
+            position: absolute;
+
+            width: 20px;
+            height: 9px;
+
+            background: #292929;
+
+            border-radius: 8px;
+
+            top: 98px;
+
+            z-index: 2;
+        }
+
+        #player .shoe.left {
+            left: 7px;
+        }
+
+        #player .shoe.right {
+            right: 7px;
+        }
+
+        /* Walking */
 
         #player.walking {
-            animation: marioWalk 0.15s infinite alternate;
+            animation: personWalk 0.15s infinite alternate;
         }
 
-        @keyframes marioWalk {
+        @keyframes personWalk {
             from {
                 margin-top: 0;
             }
@@ -153,13 +333,13 @@
             }
         }
 
-        /* Jump effect */
+        /* Jump */
 
         #player.jumping {
-            animation: marioJump 0.2s ease-out;
+            animation: personJump 0.2s ease-out;
         }
 
-        @keyframes marioJump {
+        @keyframes personJump {
             0% {
                 scale: 1;
             }
@@ -174,7 +354,7 @@
         }
 
         /* =====================================================
-            GROUND
+           GROUND
         ===================================================== */
 
         .ground {
@@ -186,11 +366,13 @@
             width: 5000px;
             height: 90px;
 
-            background: linear-gradient(to bottom,
-                    #62ad3d 0px,
-                    #62ad3d 10px,
-                    #754827 10px,
-                    #59361f 100%);
+            background: linear-gradient(
+                to bottom,
+                #62ad3d 0px,
+                #62ad3d 10px,
+                #754827 10px,
+                #59361f 100%
+            );
 
             border-top: 7px solid #3b8e2e;
 
@@ -206,12 +388,15 @@
 
             left: 0;
             right: 0;
+
             top: 18px;
             bottom: 0;
 
-            background-image: radial-gradient(circle,
-                    rgba(255, 255, 255, 0.09) 2px,
-                    transparent 3px);
+            background-image: radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.09) 2px,
+                transparent 3px
+            );
 
             background-size: 35px 35px;
 
@@ -219,7 +404,7 @@
         }
 
         /* =====================================================
-            PLATFORMS
+           PLATFORMS
         ===================================================== */
 
         .platform {
@@ -227,7 +412,12 @@
 
             height: 32px;
 
-            background: linear-gradient(to bottom, #dc9551, #b86b31 50%, #87471f);
+            background: linear-gradient(
+                to bottom,
+                #dc9551,
+                #b86b31 50%,
+                #87471f
+            );
 
             border: 3px solid #593018;
 
@@ -240,7 +430,7 @@
         }
 
         /* =====================================================
-            BLOCKS
+           BLOCKS
         ===================================================== */
 
         .block {
@@ -254,7 +444,11 @@
             justify-content: center;
             align-items: center;
 
-            background: linear-gradient(135deg, #ffc64d, #d9771f);
+            background: linear-gradient(
+                135deg,
+                #ffc64d,
+                #d9771f
+            );
 
             border: 3px solid #7c4218;
 
@@ -274,11 +468,15 @@
         }
 
         .brick {
-            background: linear-gradient(135deg, #c87532, #8e451d);
+            background: linear-gradient(
+                135deg,
+                #c87532,
+                #8e451d
+            );
         }
 
         /* =====================================================
-            PIPES
+           PIPES
         ===================================================== */
 
         .pipe {
@@ -286,12 +484,14 @@
 
             width: 76px;
 
-            background: linear-gradient(90deg,
-                    #075b2b 0%,
-                    #0c9d43 25%,
-                    #2bc95e 50%,
-                    #0c963f 75%,
-                    #075b2b 100%);
+            background: linear-gradient(
+                90deg,
+                #075b2b 0%,
+                #0c9d43 25%,
+                #2bc95e 50%,
+                #0c963f 75%,
+                #075b2b 100%
+            );
 
             border: 4px solid #064a25;
 
@@ -315,17 +515,23 @@
             left: -14px;
             top: -4px;
 
-            background: linear-gradient(90deg, #075b2b, #2bc95e, #0b8e3c);
+            background: linear-gradient(
+                90deg,
+                #075b2b,
+                #2bc95e,
+                #0b8e3c
+            );
 
             border: 4px solid #064a25;
 
             border-radius: 6px;
 
-            box-shadow: inset 0 4px 5px rgba(255, 255, 255, 0.2);
+            box-shadow:
+                inset 0 4px 5px rgba(255, 255, 255, 0.2);
         }
 
         /* =====================================================
-            ENEMY
+           ENEMY
         ===================================================== */
 
         .enemy {
@@ -334,7 +540,11 @@
             width: 50px;
             height: 44px;
 
-            background: radial-gradient(circle at 30% 25%, #a96843, #713b24 65%);
+            background: radial-gradient(
+                circle at 30% 25%,
+                #a96843,
+                #713b24 65%
+            );
 
             border: 3px solid #382016;
 
@@ -382,7 +592,7 @@
         }
 
         /* =====================================================
-            COINS
+           COINS
         ===================================================== */
 
         .coin {
@@ -393,12 +603,14 @@
 
             border-radius: 50%;
 
-            background: linear-gradient(90deg,
-                    #b87900,
-                    #ffe44a 25%,
-                    #fff27a 50%,
-                    #e5a900 75%,
-                    #9d6900);
+            background: linear-gradient(
+                90deg,
+                #b87900,
+                #ffe44a 25%,
+                #fff27a 50%,
+                #e5a900 75%,
+                #9d6900
+            );
 
             border: 3px solid #a16d00;
 
@@ -422,7 +634,7 @@
         }
 
         /* =====================================================
-            FLAG
+           FLAG
         ===================================================== */
 
         .flag-pole {
@@ -433,7 +645,12 @@
 
             bottom: 90px;
 
-            background: linear-gradient(to right, #444, #aaa, #444);
+            background: linear-gradient(
+                to right,
+                #444,
+                #aaa,
+                #444
+            );
 
             box-shadow: 4px 0 8px rgba(0, 0, 0, 0.25);
         }
@@ -447,13 +664,21 @@
             left: 8px;
             top: 10px;
 
-            background: linear-gradient(to bottom, #ff4b4b, #c91515);
+            background: linear-gradient(
+                to bottom,
+                #ff4b4b,
+                #c91515
+            );
 
-            clip-path: polygon(0 0, 100% 25%, 0 50%);
+            clip-path: polygon(
+                0 0,
+                100% 25%,
+                0 50%
+            );
         }
 
         /* =====================================================
-            HUD
+           HUD
         ===================================================== */
 
         #hud {
@@ -477,11 +702,12 @@
 
             backdrop-filter: blur(8px);
 
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* =====================================================
-            CONTROLS
+           CONTROLS
         ===================================================== */
 
         #controls {
@@ -502,7 +728,7 @@
         }
 
         /* =====================================================
-            GAME MESSAGE
+           GAME MESSAGE
         ===================================================== */
 
         #message {
@@ -529,7 +755,8 @@
 
             border-radius: 15px;
 
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.45);
         }
 
         #message h1 {
@@ -557,7 +784,11 @@
 </head>
 
 <body>
+
     <div id="game">
+
+        <!-- HUD -->
+
         <div id="hud">
             SCORE:
             <span id="score">0</span>
@@ -569,165 +800,314 @@
             <span id="lives">3</span>
         </div>
 
-        <div id="controls">← → Move &nbsp;&nbsp; ↑ Jump</div>
+        <div id="controls">
+            ← → Move &nbsp;&nbsp; ↑ Jump
+        </div>
+
+        <!-- MESSAGE -->
 
         <div id="message">
             <h1 id="messageTitle">Game Over</h1>
 
-            <p id="messageText">Try again!</p>
+            <p id="messageText">
+                Try again!
+            </p>
 
-            <button onclick="restartGame()">Restart</button>
+            <button onclick="restartGame()">
+                Restart
+            </button>
         </div>
 
+        <!-- WORLD -->
+
         <div id="world">
-            <!-- ===============================================
-            MARIO
-        ================================================ -->
+
+            <!-- =================================================
+                 HUMAN PLAYER
+            ================================================== -->
 
             <div id="player">
-                <img src="mario.png" alt="Mario" />
+
+                <div class="hair"></div>
+
+                <div class="head">
+                    <div class="eye left"></div>
+                    <div class="eye right"></div>
+                </div>
+
+                <div class="arm left"></div>
+                <div class="arm right"></div>
+
+                <div class="body"></div>
+
+                <div class="pants"></div>
+
+                <div class="leg left"></div>
+                <div class="leg right"></div>
+
+                <div class="shoe left"></div>
+                <div class="shoe right"></div>
+
             </div>
 
-            <!-- ===============================================
-            CLOUDS
-        ================================================ -->
+            <!-- =================================================
+                 CLOUDS
+            ================================================== -->
 
-            <div class="cloud" style="left: 300px; top: 80px"></div>
+            <div
+                class="cloud"
+                style="left: 300px; top: 80px">
+            </div>
 
-            <div class="cloud" style="left: 1100px; top: 130px"></div>
+            <div
+                class="cloud"
+                style="left: 1100px; top: 130px">
+            </div>
 
-            <div class="cloud" style="left: 2100px; top: 70px"></div>
+            <div
+                class="cloud"
+                style="left: 2100px; top: 70px">
+            </div>
 
-            <div class="cloud" style="left: 3300px; top: 120px"></div>
+            <div
+                class="cloud"
+                style="left: 3300px; top: 120px">
+            </div>
 
-            <!-- ===============================================
-            GROUND
-        ================================================ -->
+            <!-- =================================================
+                 GROUND
+            ================================================== -->
 
             <div class="ground"></div>
 
-            <!-- ===============================================
-            PLATFORMS
-        ================================================ -->
+            <!-- =================================================
+                 PLATFORMS
+            ================================================== -->
 
-            <div class="platform" style="left: 400px; bottom: 220px; width: 220px"></div>
-
-            <div class="platform" style="left: 800px; bottom: 320px; width: 180px"></div>
-
-            <div class="platform" style="left: 1200px; bottom: 190px; width: 250px"></div>
-
-            <div class="platform" style="left: 1700px; bottom: 280px; width: 200px"></div>
-
-            <div class="platform" style="left: 2300px; bottom: 220px; width: 300px"></div>
-
-            <div class="platform" style="left: 3000px; bottom: 330px; width: 220px"></div>
-
-            <!-- ===============================================
-            BLOCKS
-        ================================================ -->
-
-            <div class="block" style="left: 650px; bottom: 350px">?</div>
-
-            <div class="block brick" style="left: 702px; bottom: 350px"></div>
-
-            <div class="block" style="left: 754px; bottom: 350px">?</div>
-
-            <div class="block brick" style="left: 1300px; bottom: 270px"></div>
-
-            <div class="block brick" style="left: 1352px; bottom: 270px"></div>
-
-            <!-- ===============================================
-            PIPES
-        ================================================ -->
-
-            <div class="pipe" style="left: 1500px; height: 140px"></div>
-
-            <div class="pipe" style="left: 2800px; height: 190px"></div>
-
-            <div class="pipe" style="left: 3600px; height: 130px"></div>
-
-            <!-- ===============================================
-            COINS
-        ================================================ -->
-
-            <div class="coin" data-coin style="left: 470px; bottom: 280px"></div>
-
-            <div class="coin" data-coin style="left: 520px; bottom: 280px"></div>
-
-            <div class="coin" data-coin style="left: 850px; bottom: 380px"></div>
-
-            <div class="coin" data-coin style="left: 900px; bottom: 380px"></div>
-
-            <div class="coin" data-coin style="left: 1250px; bottom: 250px"></div>
-
-            <div class="coin" data-coin style="left: 1750px; bottom: 340px"></div>
-
-            <div class="coin" data-coin style="left: 2400px; bottom: 270px"></div>
-
-            <div class="coin" data-coin style="left: 3050px; bottom: 390px"></div>
-
-            <!-- ===============================================
-            ENEMIES
-        ================================================ -->
-
-            <div class="enemy" data-enemy style="left: 1000px; bottom: 90px"></div>
-
-            <div class="enemy" data-enemy style="left: 1600px; bottom: 90px"></div>
-
-            <div class="enemy" data-enemy style="left: 2150px; bottom: 90px"></div>
-
-            <div class="enemy" data-enemy style="left: 2700px; bottom: 90px"></div>
-
-            <div class="enemy" data-enemy style="left: 3400px; bottom: 90px"></div>
-
-            <!-- ===============================================
-            FINISH
-        ================================================ -->
-
-            <div class="flag-pole" style="left: 4400px">
-                <div class="flag"></div>
+            <div
+                class="platform"
+                style="left: 400px; bottom: 220px; width: 220px">
             </div>
+
+            <div
+                class="platform"
+                style="left: 800px; bottom: 320px; width: 180px">
+            </div>
+
+            <div
+                class="platform"
+                style="left: 1200px; bottom: 190px; width: 250px">
+            </div>
+
+            <div
+                class="platform"
+                style="left: 1700px; bottom: 280px; width: 200px">
+            </div>
+
+            <div
+                class="platform"
+                style="left: 2300px; bottom: 220px; width: 300px">
+            </div>
+
+            <div
+                class="platform"
+                style="left: 3000px; bottom: 330px; width: 220px">
+            </div>
+
+            <!-- =================================================
+                 BLOCKS
+            ================================================== -->
+
+            <div
+                class="block"
+                style="left: 650px; bottom: 350px">
+                ?
+            </div>
+
+            <div
+                class="block brick"
+                style="left: 702px; bottom: 350px">
+            </div>
+
+            <div
+                class="block"
+                style="left: 754px; bottom: 350px">
+                ?
+            </div>
+
+            <div
+                class="block brick"
+                style="left: 1300px; bottom: 270px">
+            </div>
+
+            <div
+                class="block brick"
+                style="left: 1352px; bottom: 270px">
+            </div>
+
+            <!-- =================================================
+                 PIPES
+            ================================================== -->
+
+            <div
+                class="pipe"
+                style="left: 1500px; height: 140px">
+            </div>
+
+            <div
+                class="pipe"
+                style="left: 2800px; height: 190px">
+            </div>
+
+            <div
+                class="pipe"
+                style="left: 3600px; height: 130px">
+            </div>
+
+            <!-- =================================================
+                 COINS
+            ================================================== -->
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 470px; bottom: 280px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 520px; bottom: 280px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 850px; bottom: 380px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 900px; bottom: 380px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 1250px; bottom: 250px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 1750px; bottom: 340px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 2400px; bottom: 270px">
+            </div>
+
+            <div
+                class="coin"
+                data-coin
+                style="left: 3050px; bottom: 390px">
+            </div>
+
+            <!-- =================================================
+                 ENEMIES
+            ================================================== -->
+
+            <div
+                class="enemy"
+                data-enemy
+                style="left: 1000px; bottom: 90px">
+            </div>
+
+            <div
+                class="enemy"
+                data-enemy
+                style="left: 1600px; bottom: 90px">
+            </div>
+
+            <div
+                class="enemy"
+                data-enemy
+                style="left: 2150px; bottom: 90px">
+            </div>
+
+            <div
+                class="enemy"
+                data-enemy
+                style="left: 2700px; bottom: 90px">
+            </div>
+
+            <div
+                class="enemy"
+                data-enemy
+                style="left: 3400px; bottom: 90px">
+            </div>
+
+            <!-- =================================================
+                 FINISH
+            ================================================== -->
+
+            <div
+                class="flag-pole"
+                style="left: 4400px">
+
+                <div class="flag"></div>
+
+            </div>
+
         </div>
     </div>
 
     <script>
-        /* =========================================================
-    DOM
-  ========================================================= */
-
-        const game = document.getElementById("game");
-
-        const world = document.getElementById("world");
-
-        const playerElement = document.getElementById("player");
-
-        const scoreElement = document.getElementById("score");
-
-        const coinsElement = document.getElementById("coins");
-
-        const livesElement = document.getElementById("lives");
-
-        const message = document.getElementById("message");
-
-        const messageTitle = document.getElementById("messageTitle");
-
-        const messageText = document.getElementById("messageText");
 
         /* =========================================================
-    PLAYER
-  ========================================================= */
+           DOM
+        ========================================================= */
+
+        const game =
+            document.getElementById("game");
+
+        const world =
+            document.getElementById("world");
+
+        const playerElement =
+            document.getElementById("player");
+
+        const scoreElement =
+            document.getElementById("score");
+
+        const coinsElement =
+            document.getElementById("coins");
+
+        const livesElement =
+            document.getElementById("lives");
+
+        const message =
+            document.getElementById("message");
+
+        const messageTitle =
+            document.getElementById("messageTitle");
+
+        const messageText =
+            document.getElementById("messageText");
+
+
+        /* =========================================================
+           PLAYER
+        ========================================================= */
 
         const player = {
+
             x: 100,
 
             y: 0,
-
-            /*
-            Visual Mario is 78x105.
-    
-            Collision box is intentionally
-            smaller than the image.
-        */
 
             width: 42,
 
@@ -745,12 +1125,13 @@
 
             grounded: false,
 
-            facing: 1,
+            facing: 1
         };
 
+
         /* =========================================================
-    GAME VARIABLES
-  ========================================================= */
+           GAME VARIABLES
+        ========================================================= */
 
         let score = 0;
 
@@ -762,344 +1143,567 @@
 
         let cameraCurrent = 0;
 
+
         /* =========================================================
-    INPUT
-  ========================================================= */
+           INPUT
+        ========================================================= */
 
         const keys = {
+
             left: false,
 
             right: false,
 
-            jump: false,
+            jump: false
         };
 
-        window.addEventListener("keydown", function (event) {
-            if (
-                event.key === "ArrowLeft" ||
-                event.key === "ArrowRight" ||
-                event.key === "ArrowUp"
-            ) {
-                event.preventDefault();
+
+        window.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "ArrowLeft" ||
+                    event.key === "ArrowRight" ||
+                    event.key === "ArrowUp"
+                ) {
+                    event.preventDefault();
+                }
+
+
+                if (event.key === "ArrowLeft") {
+
+                    keys.left = true;
+
+                    player.facing = -1;
+                }
+
+
+                if (event.key === "ArrowRight") {
+
+                    keys.right = true;
+
+                    player.facing = 1;
+                }
+
+
+                if (event.key === "ArrowUp") {
+
+                    keys.jump = true;
+                }
+
             }
+        );
 
-            if (event.key === "ArrowLeft") {
-                keys.left = true;
 
-                player.facing = -1;
+        window.addEventListener(
+            "keyup",
+            function (event) {
+
+                if (event.key === "ArrowLeft") {
+
+                    keys.left = false;
+                }
+
+
+                if (event.key === "ArrowRight") {
+
+                    keys.right = false;
+                }
+
+
+                if (event.key === "ArrowUp") {
+
+                    keys.jump = false;
+                }
+
             }
+        );
 
-            if (event.key === "ArrowRight") {
-                keys.right = true;
-
-                player.facing = 1;
-            }
-
-            if (event.key === "ArrowUp") {
-                keys.jump = true;
-            }
-        });
-
-        window.addEventListener("keyup", function (event) {
-            if (event.key === "ArrowLeft") {
-                keys.left = false;
-            }
-
-            if (event.key === "ArrowRight") {
-                keys.right = false;
-            }
-
-            if (event.key === "ArrowUp") {
-                keys.jump = false;
-            }
-        });
 
         /* =========================================================
-    PLAYER RECTANGLE
-  ========================================================= */
+           PLAYER RECTANGLE
+        ========================================================= */
 
         function getPlayerRect() {
+
             return {
+
                 left: player.x,
 
                 right: player.x + player.width,
 
                 top: player.y,
 
-                bottom: player.y + player.height,
+                bottom: player.y + player.height
             };
         }
 
+
         /* =========================================================
-    WORLD RECTANGLE
-  ========================================================= */
+           WORLD RECTANGLE
+        ========================================================= */
 
         function getWorldRect(element) {
-            const style = window.getComputedStyle(element);
 
-            const left = parseFloat(style.left) || 0;
+            const style =
+                window.getComputedStyle(element);
 
-            const width = element.offsetWidth;
+            const left =
+                parseFloat(style.left) || 0;
 
-            const height = element.offsetHeight;
+            const width =
+                element.offsetWidth;
+
+            const height =
+                element.offsetHeight;
 
             let top;
 
-            if (style.top !== "auto") {
-                top = parseFloat(style.top);
-            } else {
-                const bottom = parseFloat(style.bottom) || 0;
 
-                top = game.clientHeight - bottom - height;
+            if (style.top !== "auto") {
+
+                top =
+                    parseFloat(style.top);
+
+            } else {
+
+                const bottom =
+                    parseFloat(style.bottom) || 0;
+
+                top =
+                    game.clientHeight -
+                    bottom -
+                    height;
             }
 
+
             return {
+
                 left: left,
 
                 right: left + width,
 
                 top: top,
 
-                bottom: top + height,
+                bottom: top + height
             };
         }
 
+
         /* =========================================================
-    RECTANGLE COLLISION
-  ========================================================= */
+           RECTANGLE COLLISION
+        ========================================================= */
 
         function rectanglesOverlap(a, b) {
+
             return (
+
                 a.left < b.right &&
+
                 a.right > b.left &&
+
                 a.top < b.bottom &&
+
                 a.bottom > b.top
             );
         }
 
+
         /* =========================================================
-    INPUT
-  ========================================================= */
+           INPUT
+        ========================================================= */
 
         function handleInput() {
+
             player.velocityX = 0;
 
+
             if (keys.left) {
-                player.velocityX = -player.speed;
+
+                player.velocityX =
+                    -player.speed;
             }
+
 
             if (keys.right) {
-                player.velocityX = player.speed;
+
+                player.velocityX =
+                    player.speed;
             }
 
-            /*
-            Jump
-        */
 
-            if (keys.jump && player.grounded) {
-                player.velocityY = -player.jumpForce;
+            /* Jump */
+
+            if (
+                keys.jump &&
+                player.grounded
+            ) {
+
+                player.velocityY =
+                    -player.jumpForce;
 
                 player.grounded = false;
 
                 keys.jump = false;
 
-                playerElement.classList.add("jumping");
+                playerElement.classList.add(
+                    "jumping"
+                );
+
 
                 setTimeout(() => {
-                    playerElement.classList.remove("jumping");
+
+                    playerElement.classList.remove(
+                        "jumping"
+                    );
+
                 }, 200);
             }
         }
 
+
         /* =========================================================
-    HORIZONTAL MOVEMENT
-  ========================================================= */
+           HORIZONTAL MOVEMENT
+        ========================================================= */
 
         function updateHorizontalMovement() {
+
             player.x += player.velocityX;
 
+
             if (player.x < 0) {
+
                 player.x = 0;
             }
 
+
             const worldWidth = 5000;
 
-            if (player.x + player.width > worldWidth) {
-                player.x = worldWidth - player.width;
+
+            if (
+                player.x +
+                player.width >
+                worldWidth
+            ) {
+
+                player.x =
+                    worldWidth -
+                    player.width;
             }
         }
 
+
         /* =========================================================
-    VERTICAL PHYSICS
-  ========================================================= */
+           VERTICAL PHYSICS
+        ========================================================= */
 
         function updateVerticalMovement() {
-            const previousBottom = player.y + player.height;
 
-            player.velocityY += player.gravity;
+            const previousBottom =
+                player.y +
+                player.height;
 
-            player.y += player.velocityY;
+
+            player.velocityY +=
+                player.gravity;
+
+
+            player.y +=
+                player.velocityY;
+
 
             player.grounded = false;
 
-            /*
-            Ground
-        */
 
-            const groundTop = game.clientHeight - 90;
+            /* Ground */
 
-            if (player.y + player.height >= groundTop) {
-                player.y = groundTop - player.height;
+            const groundTop =
+                game.clientHeight - 90;
+
+
+            if (
+                player.y +
+                player.height >=
+                groundTop
+            ) {
+
+                player.y =
+                    groundTop -
+                    player.height;
 
                 player.velocityY = 0;
 
                 player.grounded = true;
             }
 
-            /*
-            Platforms / Blocks / Pipes
-        */
 
-            const platforms = document.querySelectorAll(".platform, .block, .pipe");
+            /* Platforms / Blocks / Pipes */
 
-            const currentRect = getPlayerRect();
+            const platforms =
+                document.querySelectorAll(
+                    ".platform, .block, .pipe"
+                );
 
-            platforms.forEach(function (element) {
-                const rect = getWorldRect(element);
 
-                const horizontalCollision =
-                    currentRect.right > rect.left && currentRect.left < rect.right;
+            const currentRect =
+                getPlayerRect();
 
-                const landing =
-                    player.velocityY >= 0 &&
-                    previousBottom <= rect.top &&
-                    currentRect.bottom >= rect.top;
 
-                if (horizontalCollision && landing) {
-                    player.y = rect.top - player.height;
+            platforms.forEach(
+                function (element) {
 
-                    player.velocityY = 0;
+                    const rect =
+                        getWorldRect(element);
 
-                    player.grounded = true;
-                }
-            });
-        }
 
-        /* =========================================================
-    ENEMIES
-  ========================================================= */
+                    const horizontalCollision =
+                        currentRect.right >
+                            rect.left &&
+                        currentRect.left <
+                            rect.right;
 
-        function updateEnemies() {
-            const enemies = document.querySelectorAll(".enemy");
 
-            enemies.forEach(function (enemy) {
-                if (enemy.dataset.dead === "true") {
-                    return;
-                }
+                    const landing =
 
-                let x = parseFloat(enemy.style.left);
+                        player.velocityY >= 0 &&
 
-                let direction = Number(enemy.dataset.direction || 1);
+                        previousBottom <=
+                            rect.top &&
 
-                if (!enemy.dataset.startX) {
-                    enemy.dataset.startX = x;
-                }
+                        currentRect.bottom >=
+                            rect.top;
 
-                const startX = Number(enemy.dataset.startX);
-
-                const speed = 1.5;
-
-                x += speed * direction;
-
-                if (x > startX + 130) {
-                    direction = -1;
-                }
-
-                if (x < startX - 130) {
-                    direction = 1;
-                }
-
-                enemy.dataset.direction = direction;
-
-                enemy.style.left = x + "px";
-            });
-        }
-
-        /* =========================================================
-    ENEMY COLLISION
-  ========================================================= */
-
-        function checkEnemyCollision() {
-            const enemies = document.querySelectorAll(".enemy");
-
-            const playerRect = getPlayerRect();
-
-            enemies.forEach(function (enemy) {
-                if (enemy.dataset.dead === "true") {
-                    return;
-                }
-
-                const enemyRect = getWorldRect(enemy);
-
-                if (rectanglesOverlap(playerRect, enemyRect)) {
-                    /*
-                        Stomp enemy
-                        */
 
                     if (
-                        player.velocityY > 0 &&
-                        playerRect.bottom - player.velocityY <= enemyRect.top + 15
+                        horizontalCollision &&
+                        landing
                     ) {
-                        killEnemy(enemy);
-                    } else {
-                        hurtPlayer();
+
+                        player.y =
+                            rect.top -
+                            player.height;
+
+                        player.velocityY = 0;
+
+                        player.grounded = true;
                     }
+
                 }
-            });
+            );
         }
 
+
         /* =========================================================
-    KILL ENEMY
-  ========================================================= */
+           ENEMIES
+        ========================================================= */
+
+        function updateEnemies() {
+
+            const enemies =
+                document.querySelectorAll(
+                    ".enemy"
+                );
+
+
+            enemies.forEach(
+                function (enemy) {
+
+                    if (
+                        enemy.dataset.dead ===
+                        "true"
+                    ) {
+                        return;
+                    }
+
+
+                    let x =
+                        parseFloat(
+                            enemy.style.left
+                        );
+
+
+                    let direction =
+                        Number(
+                            enemy.dataset.direction ||
+                            1
+                        );
+
+
+                    if (
+                        !enemy.dataset.startX
+                    ) {
+
+                        enemy.dataset.startX = x;
+                    }
+
+
+                    const startX =
+                        Number(
+                            enemy.dataset.startX
+                        );
+
+
+                    const speed = 1.5;
+
+
+                    x +=
+                        speed *
+                        direction;
+
+
+                    if (
+                        x >
+                        startX + 130
+                    ) {
+
+                        direction = -1;
+                    }
+
+
+                    if (
+                        x <
+                        startX - 130
+                    ) {
+
+                        direction = 1;
+                    }
+
+
+                    enemy.dataset.direction =
+                        direction;
+
+                    enemy.style.left =
+                        x + "px";
+
+                }
+            );
+        }
+
+
+        /* =========================================================
+           ENEMY COLLISION
+        ========================================================= */
+
+        function checkEnemyCollision() {
+
+            const enemies =
+                document.querySelectorAll(
+                    ".enemy"
+                );
+
+
+            const playerRect =
+                getPlayerRect();
+
+
+            enemies.forEach(
+                function (enemy) {
+
+                    if (
+                        enemy.dataset.dead ===
+                        "true"
+                    ) {
+                        return;
+                    }
+
+
+                    const enemyRect =
+                        getWorldRect(enemy);
+
+
+                    if (
+                        rectanglesOverlap(
+                            playerRect,
+                            enemyRect
+                        )
+                    ) {
+
+                        /* Stomp enemy */
+
+                        if (
+
+                            player.velocityY > 0 &&
+
+                            playerRect.bottom -
+                                player.velocityY <=
+                                enemyRect.top + 15
+
+                        ) {
+
+                            killEnemy(enemy);
+
+                        } else {
+
+                            hurtPlayer();
+                        }
+                    }
+
+                }
+            );
+        }
+
+
+        /* =========================================================
+           KILL ENEMY
+        ========================================================= */
 
         function killEnemy(enemy) {
+
             enemy.dataset.dead = "true";
 
-            enemy.style.transform = "scaleY(0.25)";
+            enemy.style.transform =
+                "scaleY(0.25)";
+
 
             score += 100;
 
             updateHUD();
 
-            setTimeout(function () {
-                enemy.remove();
-            }, 250);
+
+            setTimeout(
+                function () {
+
+                    enemy.remove();
+
+                },
+                250
+            );
         }
 
+
         /* =========================================================
-    DAMAGE
-  ========================================================= */
+           DAMAGE
+        ========================================================= */
 
         function hurtPlayer() {
+
             if (!gameRunning) {
+
                 return;
             }
+
 
             lives--;
 
             updateHUD();
 
+
             if (lives <= 0) {
+
                 gameOver();
 
                 return;
             }
 
-            /*
-            Respawn
-        */
 
-            player.x = Math.max(100, player.x - 300);
+            /* Respawn */
+
+            player.x =
+                Math.max(
+                    100,
+                    player.x - 300
+                );
 
             player.y = 100;
 
@@ -1108,159 +1712,257 @@
             player.velocityY = 0;
         }
 
+
         /* =========================================================
-    COINS
-  ========================================================= */
+           COINS
+        ========================================================= */
 
         function checkCoins() {
-            const coinElements = document.querySelectorAll("[data-coin]");
 
-            const playerRect = getPlayerRect();
+            const coinElements =
+                document.querySelectorAll(
+                    "[data-coin]"
+                );
 
-            coinElements.forEach(function (coin) {
-                if (coin.dataset.collected === "true") {
-                    return;
+
+            const playerRect =
+                getPlayerRect();
+
+
+            coinElements.forEach(
+                function (coin) {
+
+                    if (
+                        coin.dataset.collected ===
+                        "true"
+                    ) {
+                        return;
+                    }
+
+
+                    const coinRect =
+                        getWorldRect(coin);
+
+
+                    if (
+                        rectanglesOverlap(
+                            playerRect,
+                            coinRect
+                        )
+                    ) {
+
+                        coin.dataset.collected =
+                            "true";
+
+                        coin.style.display =
+                            "none";
+
+
+                        coins++;
+
+                        score += 50;
+
+                        updateHUD();
+                    }
+
                 }
-
-                const coinRect = getWorldRect(coin);
-
-                if (rectanglesOverlap(playerRect, coinRect)) {
-                    coin.dataset.collected = "true";
-
-                    coin.style.display = "none";
-
-                    coins++;
-
-                    score += 50;
-
-                    updateHUD();
-                }
-            });
+            );
         }
 
+
         /* =========================================================
-    CAMERA
-  ========================================================= */
+           CAMERA
+        ========================================================= */
 
         function updateCamera() {
-            const screenCenter = game.clientWidth / 2;
 
-            let targetCamera = player.x - screenCenter;
+            const screenCenter =
+                game.clientWidth / 2;
 
-            const maxCamera = 5000 - game.clientWidth;
 
-            targetCamera = Math.max(0, Math.min(targetCamera, maxCamera));
+            let targetCamera =
+                player.x -
+                screenCenter;
 
-            /*
-            Smooth camera
-        */
 
-            cameraCurrent += (targetCamera - cameraCurrent) * 0.12;
+            const maxCamera =
+                5000 -
+                game.clientWidth;
 
-            world.style.transform = `translate3d(
-            ${-cameraCurrent}px,
-            0,
-            0
-        )`;
+
+            targetCamera =
+                Math.max(
+                    0,
+                    Math.min(
+                        targetCamera,
+                        maxCamera
+                    )
+                );
+
+
+            /* Smooth camera */
+
+            cameraCurrent +=
+                (
+                    targetCamera -
+                    cameraCurrent
+                ) * 0.12;
+
+
+            world.style.transform =
+                `translate3d(
+                    ${-cameraCurrent}px,
+                    0,
+                    0
+                )`;
         }
 
+
         /* =========================================================
-    FINISH
-  ========================================================= */
+           FINISH
+        ========================================================= */
 
         function checkFinish() {
+
             if (player.x >= 4350) {
+
                 levelComplete();
             }
         }
 
+
         /* =========================================================
-    HUD
-  ========================================================= */
+           HUD
+        ========================================================= */
 
         function updateHUD() {
-            scoreElement.textContent = score;
 
-            coinsElement.textContent = coins;
+            scoreElement.textContent =
+                score;
 
-            livesElement.textContent = lives;
+            coinsElement.textContent =
+                coins;
+
+            livesElement.textContent =
+                lives;
         }
 
+
         /* =========================================================
-    RENDER PLAYER
-  ========================================================= */
+           RENDER PLAYER
+        ========================================================= */
 
         function renderPlayer() {
-            playerElement.style.left = player.x + "px";
 
-            playerElement.style.top = player.y + "px";
+            playerElement.style.left =
+                player.x + "px";
 
-            /*
-            Walking animation
-        */
+            playerElement.style.top =
+                player.y + "px";
 
-            if (player.velocityX !== 0 && player.grounded) {
-                playerElement.classList.add("walking");
+
+            /* Walking animation */
+
+            if (
+                player.velocityX !== 0 &&
+                player.grounded
+            ) {
+
+                playerElement.classList.add(
+                    "walking"
+                );
+
             } else {
-                playerElement.classList.remove("walking");
+
+                playerElement.classList.remove(
+                    "walking"
+                );
             }
 
-            /*
-            Face direction
-        */
 
-            if (player.facing === -1) {
-                playerElement.style.transform = "scaleX(-1)";
+            /* Face direction */
+
+            if (
+                player.facing === -1
+            ) {
+
+                playerElement.style.transform =
+                    "scaleX(-1)";
+
             } else {
-                playerElement.style.transform = "scaleX(1)";
+
+                playerElement.style.transform =
+                    "scaleX(1)";
             }
         }
 
+
         /* =========================================================
-    GAME OVER
-  ========================================================= */
+           GAME OVER
+        ========================================================= */
 
         function gameOver() {
+
             gameRunning = false;
 
-            messageTitle.textContent = "GAME OVER";
+            messageTitle.textContent =
+                "GAME OVER";
 
-            messageText.textContent = "Score: " + score;
+            messageText.textContent =
+                "Score: " + score;
 
-            message.style.display = "block";
+            message.style.display =
+                "block";
         }
 
+
         /* =========================================================
-    LEVEL COMPLETE
-  ========================================================= */
+           LEVEL COMPLETE
+        ========================================================= */
 
         function levelComplete() {
+
             if (!gameRunning) {
+
                 return;
             }
 
+
             gameRunning = false;
 
-            messageTitle.textContent = "LEVEL COMPLETE!";
 
-            messageText.textContent = "Score: " + score + " | Coins: " + coins;
+            messageTitle.textContent =
+                "LEVEL COMPLETE!";
 
-            message.style.display = "block";
+
+            messageText.textContent =
+                "Score: " +
+                score +
+                " | Coins: " +
+                coins;
+
+
+            message.style.display =
+                "block";
         }
 
+
         /* =========================================================
-    RESTART
-  ========================================================= */
+           RESTART
+        ========================================================= */
 
         function restartGame() {
+
             location.reload();
         }
 
+
         /* =========================================================
-    UPDATE
-  ========================================================= */
+           UPDATE
+        ========================================================= */
 
         function update() {
+
             handleInput();
 
             updateHorizontalMovement();
@@ -1278,36 +1980,52 @@
             updateCamera();
         }
 
+
         /* =========================================================
-    GAME LOOP
-  ========================================================= */
+           GAME LOOP
+        ========================================================= */
 
         function gameLoop() {
+
             if (gameRunning) {
+
                 update();
 
                 renderPlayer();
             }
 
-            requestAnimationFrame(gameLoop);
+
+            requestAnimationFrame(
+                gameLoop
+            );
         }
 
+
         /* =========================================================
-    START
-  ========================================================= */
+           START
+        ========================================================= */
 
         function startGame() {
-            player.y = game.clientHeight - 90 - player.height;
+
+            player.y =
+                game.clientHeight -
+                90 -
+                player.height;
+
 
             player.grounded = true;
+
 
             updateHUD();
 
             gameLoop();
         }
 
+
         startGame();
+
     </script>
+
 </body>
 
 </html>
