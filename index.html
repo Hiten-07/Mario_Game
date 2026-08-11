@@ -1,1435 +1,1834 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mario Platform Game</title>
 
-    <title>Human Platform Game</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+body {
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+}
 
-        body {
-            overflow: hidden;
-            font-family: Arial, sans-serif;
-            background: #69c9ff;
-        }
+/* =========================================================
+   GAME
+========================================================= */
 
-        /* =====================================================
-           GAME
-        ===================================================== */
+#game {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
 
-        #game {
-            width: 100vw;
-            height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        #48bdf5 0%,
+        #8bdcff 60%,
+        #d8f5ff 100%
+    );
+}
 
-            position: relative;
-            overflow: hidden;
+/* =========================================================
+   WORLD
+========================================================= */
 
-            background: linear-gradient(
-                to bottom,
-                #35aef5 0%,
-                #74d2ff 45%,
-                #bdeeff 100%
-            );
-        }
+#world {
+    position: absolute;
 
-        /* =====================================================
-           WORLD
-        ===================================================== */
+    width: 5000px;
+    height: 100%;
 
-        #world {
-            position: absolute;
+    left: 0;
+    top: 0;
+}
 
-            width: 5000px;
-            height: 100%;
+/* =========================================================
+   CLOUDS
+========================================================= */
 
-            top: 0;
-            left: 0;
+.cloud {
+    position: absolute;
 
-            will-change: transform;
-        }
+    width: 150px;
+    height: 45px;
 
-        /* =====================================================
-           CLOUDS
-        ===================================================== */
+    background: white;
 
-        .cloud {
-            position: absolute;
+    border-radius: 50px;
 
-            width: 150px;
-            height: 48px;
+    opacity: 0.9;
+}
 
-            background: linear-gradient(
-                to bottom,
-                #ffffff,
-                #e8f7ff
-            );
+.cloud::before {
+    content: "";
 
-            border-radius: 50px;
+    position: absolute;
 
-            filter: drop-shadow(
-                0 8px 6px rgba(0, 0, 0, 0.08)
-            );
+    width: 65px;
+    height: 65px;
 
-            opacity: 0.92;
-        }
+    left: 25px;
+    top: -30px;
 
-        .cloud::before {
-            content: "";
+    background: white;
 
-            position: absolute;
+    border-radius: 50%;
+}
 
-            width: 65px;
-            height: 65px;
+.cloud::after {
+    content: "";
 
-            background: white;
+    position: absolute;
 
-            border-radius: 50%;
+    width: 55px;
+    height: 55px;
 
-            left: 25px;
-            top: -30px;
-        }
+    right: 20px;
+    top: -23px;
 
-        .cloud::after {
-            content: "";
+    background: white;
 
-            position: absolute;
+    border-radius: 50%;
+}
 
-            width: 55px;
-            height: 55px;
+/* =========================================================
+   MARIO
+========================================================= */
 
-            background: white;
+#player {
+    position: absolute;
 
-            border-radius: 50%;
+    width: 64px;
+    height: 110px;
 
-            right: 20px;
-            top: -22px;
-        }
+    z-index: 100;
 
-        /* =====================================================
-           PLAYER - HUMAN
-        ===================================================== */
+    pointer-events: none;
 
-        #player {
-            position: absolute;
+    transform-origin: center bottom;
+}
 
-            width: 58px;
-            height: 105px;
+/* ---------------------------------------------------------
+   HAT
+--------------------------------------------------------- */
 
-            z-index: 50;
+.mario-hat {
+    position: absolute;
 
-            pointer-events: none;
+    width: 48px;
+    height: 21px;
 
-            transform-origin: center bottom;
+    left: 8px;
+    top: 1px;
 
-            filter: drop-shadow(
-                0 9px 6px rgba(0, 0, 0, 0.3)
-            );
+    background: #e52521;
 
-            will-change: transform, left, top;
-        }
+    border: 3px solid #9d1111;
 
-        /* Hair */
+    border-radius: 25px 25px 7px 7px;
 
-        #player .hair {
-            position: absolute;
+    z-index: 7;
+}
 
-            width: 35px;
-            height: 17px;
+.mario-hat::before {
+    content: "";
 
-            background: #241a16;
+    position: absolute;
 
-            border-radius: 18px 18px 6px 6px;
+    width: 30px;
+    height: 9px;
 
-            top: 0;
-            left: 12px;
+    left: -7px;
+    bottom: -4px;
 
-            z-index: 4;
-        }
+    background: #e52521;
 
-        /* Head */
+    border-radius: 50%;
 
-        #player .head {
-            position: absolute;
+    border-bottom: 3px solid #9d1111;
+}
 
-            width: 32px;
-            height: 34px;
+.mario-hat::after {
+    content: "M";
 
-            background: #f2b58d;
+    position: absolute;
 
-            border: 2px solid #9b5d3d;
+    width: 20px;
+    height: 20px;
 
-            border-radius: 50%;
+    left: 13px;
+    top: -1px;
 
-            top: 7px;
-            left: 13px;
+    color: white;
 
-            z-index: 3;
-        }
+    font-size: 15px;
+    font-weight: 900;
 
-        /* Eyes */
+    text-align: center;
+}
 
-        #player .eye {
-            position: absolute;
+/* ---------------------------------------------------------
+   HEAD
+--------------------------------------------------------- */
 
-            width: 4px;
-            height: 5px;
+.mario-head {
+    position: absolute;
 
-            background: #222;
+    width: 39px;
+    height: 43px;
 
-            border-radius: 50%;
+    left: 13px;
+    top: 13px;
 
-            top: 14px;
+    background: #f2b27f;
 
-            z-index: 5;
-        }
+    border: 2px solid #914c2f;
 
-        #player .eye.left {
-            left: 7px;
-        }
+    border-radius: 45%;
 
-        #player .eye.right {
-            right: 7px;
-        }
+    z-index: 5;
+}
 
-        /* Body / Shirt */
+/* ---------------------------------------------------------
+   EAR
+--------------------------------------------------------- */
 
-        #player .body {
-            position: absolute;
+.mario-head::before {
+    content: "";
 
-            width: 38px;
-            height: 42px;
+    position: absolute;
 
-            background: #2878d0;
+    width: 10px;
+    height: 16px;
 
-            border: 2px solid #174b85;
+    left: -7px;
+    top: 17px;
 
-            border-radius: 10px 10px 5px 5px;
+    background: #f2b27f;
 
-            top: 36px;
-            left: 10px;
+    border: 2px solid #914c2f;
 
-            z-index: 2;
-        }
+    border-radius: 50%;
+}
 
-        /* Arms */
+/* ---------------------------------------------------------
+   EYE
+--------------------------------------------------------- */
 
-        #player .arm {
-            position: absolute;
+.mario-eye {
+    position: absolute;
 
-            width: 11px;
-            height: 38px;
+    width: 6px;
+    height: 10px;
 
-            background: #f2b58d;
+    right: 6px;
+    top: 13px;
 
-            border: 2px solid #9b5d3d;
+    background: #111;
 
-            border-radius: 10px;
+    border-radius: 50%;
+}
 
-            top: 38px;
+/* ---------------------------------------------------------
+   NOSE
+--------------------------------------------------------- */
 
-            z-index: 1;
-        }
+.mario-head::after {
+    content: "";
 
-        #player .arm.left {
-            left: 2px;
-            transform: rotate(12deg);
-        }
+    position: absolute;
 
-        #player .arm.right {
-            right: 2px;
-            transform: rotate(-12deg);
-        }
+    width: 13px;
+    height: 13px;
 
-        /* Pants */
+    right: -5px;
+    top: 22px;
 
-        #player .pants {
-            position: absolute;
+    background: #f2b27f;
 
-            width: 40px;
-            height: 25px;
+    border-radius: 50%;
 
-            background: #303b91;
+    border-right: 2px solid #914c2f;
+}
 
-            border: 2px solid #202760;
+/* ---------------------------------------------------------
+   MUSTACHE
+--------------------------------------------------------- */
 
-            border-radius: 3px;
+.mario-mustache {
+    position: absolute;
 
-            top: 75px;
-            left: 9px;
+    width: 24px;
+    height: 10px;
 
-            z-index: 2;
-        }
+    right: 0;
+    bottom: 7px;
 
-        /* Legs */
+    background: #301b12;
 
-        #player .leg {
-            position: absolute;
+    border-radius: 50%;
+}
 
-            width: 12px;
-            height: 28px;
+/* ---------------------------------------------------------
+   BODY
+--------------------------------------------------------- */
 
-            background: #303b91;
+.mario-body {
+    position: absolute;
 
-            border-radius: 5px;
+    width: 43px;
+    height: 40px;
 
-            top: 91px;
+    left: 10px;
+    top: 51px;
 
-            z-index: 1;
-        }
+    background: #e52521;
 
-        #player .leg.left {
-            left: 14px;
-        }
+    border: 3px solid #9d1111;
 
-        #player .leg.right {
-            right: 14px;
-        }
+    border-radius: 11px 11px 5px 5px;
 
-        /* Shoes */
+    z-index: 4;
+}
 
-        #player .shoe {
-            position: absolute;
+/* Blue overalls */
 
-            width: 20px;
-            height: 9px;
+.mario-body::before {
+    content: "";
 
-            background: #292929;
+    position: absolute;
 
-            border-radius: 8px;
+    width: 37px;
+    height: 23px;
 
-            top: 98px;
+    left: 0px;
+    bottom: -2px;
 
-            z-index: 2;
-        }
+    background: #1769aa;
 
-        #player .shoe.left {
-            left: 7px;
-        }
+    border-radius: 5px;
 
-        #player .shoe.right {
-            right: 7px;
-        }
+    border-top: 3px solid #0d4773;
+}
 
-        /* Walking */
+/* Overall buttons */
 
-        #player.walking {
-            animation: personWalk 0.15s infinite alternate;
-        }
+.mario-body::after {
+    content: "";
 
-        @keyframes personWalk {
-            from {
-                margin-top: 0;
-            }
+    position: absolute;
 
-            to {
-                margin-top: -3px;
-            }
-        }
+    width: 7px;
+    height: 7px;
 
-        /* Jump */
+    left: 8px;
+    bottom: 12px;
 
-        #player.jumping {
-            animation: personJump 0.2s ease-out;
-        }
+    background: #ffd42a;
 
-        @keyframes personJump {
-            0% {
-                scale: 1;
-            }
+    border-radius: 50%;
 
-            50% {
-                scale: 1.04 0.97;
-            }
+    box-shadow: 18px 0 #ffd42a;
+}
 
-            100% {
-                scale: 1;
-            }
-        }
+/* ---------------------------------------------------------
+   ARMS
+--------------------------------------------------------- */
 
-        /* =====================================================
-           GROUND
-        ===================================================== */
+.mario-arm {
+    position: absolute;
 
-        .ground {
-            position: absolute;
+    width: 13px;
+    height: 35px;
 
-            left: 0;
-            bottom: 0;
+    top: 52px;
 
-            width: 5000px;
-            height: 90px;
+    background: #f2b27f;
 
-            background: linear-gradient(
-                to bottom,
-                #62ad3d 0px,
-                #62ad3d 10px,
-                #754827 10px,
-                #59361f 100%
-            );
+    border: 2px solid #914c2f;
 
-            border-top: 7px solid #3b8e2e;
+    border-radius: 12px;
 
-            box-shadow:
-                inset 0 8px 0 rgba(255, 255, 255, 0.12),
-                inset 0 -15px 20px rgba(0, 0, 0, 0.25);
-        }
+    z-index: 2;
+}
 
-        .ground::after {
-            content: "";
+.mario-arm.left {
+    left: 0;
 
-            position: absolute;
+    transform: rotate(20deg);
+}
 
-            left: 0;
-            right: 0;
+.mario-arm.right {
+    right: 0;
 
-            top: 18px;
-            bottom: 0;
+    transform: rotate(-20deg);
+}
 
-            background-image: radial-gradient(
-                circle,
-                rgba(255, 255, 255, 0.09) 2px,
-                transparent 3px
-            );
+/* ---------------------------------------------------------
+   WHITE GLOVES
+--------------------------------------------------------- */
 
-            background-size: 35px 35px;
+.mario-arm.left::after,
+.mario-arm.right::after {
+    content: "";
 
-            opacity: 0.5;
-        }
+    position: absolute;
 
-        /* =====================================================
-           PLATFORMS
-        ===================================================== */
+    width: 14px;
+    height: 12px;
 
-        .platform {
-            position: absolute;
+    bottom: -6px;
 
-            height: 32px;
+    background: white;
 
-            background: linear-gradient(
-                to bottom,
-                #dc9551,
-                #b86b31 50%,
-                #87471f
-            );
+    border: 2px solid #bbb;
 
-            border: 3px solid #593018;
+    border-radius: 50%;
+}
 
-            border-radius: 5px;
+/* ---------------------------------------------------------
+   LEGS
+--------------------------------------------------------- */
 
-            box-shadow:
-                inset 0 4px 0 rgba(255, 255, 255, 0.18),
-                inset 0 -5px 0 rgba(0, 0, 0, 0.2),
-                0 7px 12px rgba(0, 0, 0, 0.25);
-        }
+.mario-leg {
+    position: absolute;
 
-        /* =====================================================
-           BLOCKS
-        ===================================================== */
+    width: 15px;
+    height: 29px;
 
-        .block {
-            position: absolute;
+    top: 84px;
 
-            width: 52px;
-            height: 52px;
+    background: #1769aa;
 
-            display: flex;
+    border-radius: 4px;
 
-            justify-content: center;
-            align-items: center;
+    z-index: 2;
+}
 
-            background: linear-gradient(
-                135deg,
-                #ffc64d,
-                #d9771f
-            );
+.mario-leg.left {
+    left: 15px;
+}
 
-            border: 3px solid #7c4218;
+.mario-leg.right {
+    right: 15px;
+}
 
-            border-radius: 3px;
+/* ---------------------------------------------------------
+   SHOES
+--------------------------------------------------------- */
 
-            color: white;
+.mario-shoe {
+    position: absolute;
 
-            font-size: 29px;
-            font-weight: 900;
+    width: 25px;
+    height: 12px;
 
-            text-shadow: 2px 2px 0 #8b4c16;
+    top: 98px;
 
-            box-shadow:
-                inset 3px 3px 0 rgba(255, 255, 255, 0.25),
-                inset -4px -4px 0 rgba(0, 0, 0, 0.2),
-                0 5px 10px rgba(0, 0, 0, 0.2);
-        }
+    background: #703719;
 
-        .brick {
-            background: linear-gradient(
-                135deg,
-                #c87532,
-                #8e451d
-            );
-        }
+    border: 2px solid #4b2311;
 
-        /* =====================================================
-           PIPES
-        ===================================================== */
+    border-radius: 12px;
 
-        .pipe {
-            position: absolute;
+    z-index: 5;
+}
 
-            width: 76px;
+.mario-shoe.left {
+    left: 3px;
+}
 
-            background: linear-gradient(
-                90deg,
-                #075b2b 0%,
-                #0c9d43 25%,
-                #2bc95e 50%,
-                #0c963f 75%,
-                #075b2b 100%
-            );
+.mario-shoe.right {
+    right: 3px;
+}
 
-            border: 4px solid #064a25;
+/* =========================================================
+   WALKING ANIMATION
+========================================================= */
 
-            border-radius: 5px 5px 0 0;
+#player.walking .mario-leg.left {
+    animation: leftLeg 0.16s infinite alternate;
+}
 
-            bottom: 90px;
+#player.walking .mario-leg.right {
+    animation: rightLeg 0.16s infinite alternate;
+}
 
-            box-shadow:
-                inset 8px 0 10px rgba(255, 255, 255, 0.15),
-                8px 0 15px rgba(0, 0, 0, 0.25);
-        }
+#player.walking .mario-arm.left {
+    animation: leftArm 0.16s infinite alternate;
+}
 
-        .pipe::before {
-            content: "";
+#player.walking .mario-arm.right {
+    animation: rightArm 0.16s infinite alternate;
+}
 
-            position: absolute;
+@keyframes leftLeg {
+    from {
+        transform: translateX(0);
+    }
 
-            width: 96px;
-            height: 25px;
+    to {
+        transform: translateX(5px);
+    }
+}
 
-            left: -14px;
-            top: -4px;
+@keyframes rightLeg {
+    from {
+        transform: translateX(0);
+    }
 
-            background: linear-gradient(
-                90deg,
-                #075b2b,
-                #2bc95e,
-                #0b8e3c
-            );
+    to {
+        transform: translateX(-5px);
+    }
+}
 
-            border: 4px solid #064a25;
+@keyframes leftArm {
+    from {
+        transform: rotate(20deg);
+    }
 
-            border-radius: 6px;
+    to {
+        transform: rotate(-15deg);
+    }
+}
 
-            box-shadow:
-                inset 0 4px 5px rgba(255, 255, 255, 0.2);
-        }
+@keyframes rightArm {
+    from {
+        transform: rotate(-20deg);
+    }
 
-        /* =====================================================
-           ENEMY
-        ===================================================== */
+    to {
+        transform: rotate(15deg);
+    }
+}
 
-        .enemy {
-            position: absolute;
+/* =========================================================
+   JUMP
+========================================================= */
 
-            width: 50px;
-            height: 44px;
+#player.jumping {
+    animation: jumpAnimation 0.2s ease-out;
+}
 
-            background: radial-gradient(
-                circle at 30% 25%,
-                #a96843,
-                #713b24 65%
-            );
+@keyframes jumpAnimation {
+    0% {
+        scale: 1;
+    }
 
-            border: 3px solid #382016;
+    50% {
+        scale: 1.08 0.92;
+    }
 
-            border-radius: 50% 50% 25% 25%;
+    100% {
+        scale: 1;
+    }
+}
 
-            box-shadow: 0 7px 8px rgba(0, 0, 0, 0.25);
+/* =========================================================
+   GROUND
+========================================================= */
 
-            z-index: 30;
-        }
+.ground {
+    position: absolute;
 
-        .enemy::before {
-            content: "";
+    left: 0;
+    bottom: 0;
 
-            position: absolute;
+    width: 5000px;
+    height: 90px;
 
-            width: 9px;
-            height: 9px;
+    background:
+        linear-gradient(
+            to bottom,
+            #5eaa39 0px,
+            #5eaa39 10px,
+            #754827 10px,
+            #59361f 100%
+        );
 
-            background: white;
+    border-top: 7px solid #3b8e2e;
+}
 
-            border-radius: 50%;
+/* =========================================================
+   PLATFORMS
+========================================================= */
 
-            left: 10px;
-            top: 12px;
+.platform {
+    position: absolute;
 
-            box-shadow: 20px 0 white;
-        }
+    height: 32px;
 
-        .enemy::after {
-            content: "";
+    background:
+        linear-gradient(
+            to bottom,
+            #dc9551,
+            #b86b31,
+            #87471f
+        );
 
-            position: absolute;
+    border: 3px solid #593018;
 
-            width: 5px;
-            height: 5px;
+    border-radius: 5px;
 
-            background: #111;
+    box-shadow:
+        0 6px 8px rgba(0,0,0,0.2);
+}
 
-            border-radius: 50%;
+/* =========================================================
+   BLOCKS
+========================================================= */
 
-            left: 13px;
-            top: 15px;
+.block {
+    position: absolute;
 
-            box-shadow: 20px 0 #111;
-        }
+    width: 52px;
+    height: 52px;
 
-        /* =====================================================
-           COINS
-        ===================================================== */
+    display: flex;
 
-        .coin {
-            position: absolute;
+    justify-content: center;
+    align-items: center;
 
-            width: 30px;
-            height: 38px;
+    background:
+        linear-gradient(
+            135deg,
+            #ffc64d,
+            #d9771f
+        );
 
-            border-radius: 50%;
+    border: 3px solid #7c4218;
 
-            background: linear-gradient(
-                90deg,
-                #b87900,
-                #ffe44a 25%,
-                #fff27a 50%,
-                #e5a900 75%,
-                #9d6900
-            );
+    color: white;
 
-            border: 3px solid #a16d00;
+    font-size: 29px;
+    font-weight: bold;
 
-            box-shadow:
-                0 4px 8px rgba(0, 0, 0, 0.25),
-                inset 3px 0 4px rgba(255, 255, 255, 0.5);
+    text-shadow:
+        2px 2px #8b4c16;
+}
 
-            animation: coinSpin 0.7s ease-in-out infinite alternate;
+.brick {
+    background:
+        linear-gradient(
+            135deg,
+            #c87532,
+            #8e451d
+        );
+}
 
-            z-index: 10;
-        }
+/* =========================================================
+   PIPES
+========================================================= */
 
-        @keyframes coinSpin {
-            from {
-                transform: scaleX(1);
-            }
+.pipe {
+    position: absolute;
 
-            to {
-                transform: scaleX(0.25);
-            }
-        }
+    width: 76px;
 
-        /* =====================================================
-           FLAG
-        ===================================================== */
+    background:
+        linear-gradient(
+            90deg,
+            #075b2b,
+            #0c9d43,
+            #2bc95e,
+            #0c963f,
+            #075b2b
+        );
 
-        .flag-pole {
-            position: absolute;
+    border: 4px solid #064a25;
 
-            width: 8px;
-            height: 300px;
+    bottom: 90px;
 
-            bottom: 90px;
+    border-radius: 5px 5px 0 0;
+}
 
-            background: linear-gradient(
-                to right,
-                #444,
-                #aaa,
-                #444
-            );
+.pipe::before {
+    content: "";
 
-            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.25);
-        }
+    position: absolute;
 
-        .flag {
-            position: absolute;
+    width: 96px;
+    height: 25px;
 
-            width: 90px;
-            height: 55px;
+    left: -14px;
+    top: -4px;
 
-            left: 8px;
-            top: 10px;
+    background:
+        linear-gradient(
+            90deg,
+            #075b2b,
+            #2bc95e,
+            #0b8e3c
+        );
 
-            background: linear-gradient(
-                to bottom,
-                #ff4b4b,
-                #c91515
-            );
+    border: 4px solid #064a25;
 
-            clip-path: polygon(
-                0 0,
-                100% 25%,
-                0 50%
-            );
-        }
+    border-radius: 6px;
+}
 
-        /* =====================================================
-           HUD
-        ===================================================== */
+/* =========================================================
+   ENEMY
+========================================================= */
 
-        #hud {
-            position: fixed;
+.enemy {
+    position: absolute;
 
-            top: 20px;
-            left: 20px;
+    width: 50px;
+    height: 44px;
 
-            z-index: 200;
+    background:
+        radial-gradient(
+            circle at 30% 25%,
+            #a96843,
+            #713b24
+        );
 
-            color: white;
+    border: 3px solid #382016;
 
-            font-size: 19px;
-            font-weight: 800;
+    border-radius:
+        50% 50% 25% 25%;
 
-            background: rgba(0, 0, 0, 0.65);
+    z-index: 30;
+}
 
-            padding: 12px 18px;
+.enemy::before {
+    content: "";
 
-            border-radius: 10px;
+    position: absolute;
 
-            backdrop-filter: blur(8px);
+    width: 9px;
+    height: 9px;
 
-            box-shadow:
-                0 5px 20px rgba(0, 0, 0, 0.2);
-        }
+    left: 10px;
+    top: 12px;
 
-        /* =====================================================
-           CONTROLS
-        ===================================================== */
+    background: white;
 
-        #controls {
-            position: fixed;
+    border-radius: 50%;
 
-            bottom: 20px;
-            left: 20px;
+    box-shadow:
+        20px 0 white;
+}
 
-            z-index: 200;
+.enemy::after {
+    content: "";
 
-            color: white;
+    position: absolute;
 
-            padding: 10px 15px;
+    width: 5px;
+    height: 5px;
 
-            background: rgba(0, 0, 0, 0.55);
+    left: 13px;
+    top: 15px;
 
-            border-radius: 8px;
-        }
+    background: black;
 
-        /* =====================================================
-           GAME MESSAGE
-        ===================================================== */
+    border-radius: 50%;
 
-        #message {
-            position: fixed;
+    box-shadow:
+        20px 0 black;
+}
 
-            left: 50%;
-            top: 50%;
+/* =========================================================
+   COINS
+========================================================= */
 
-            transform: translate(-50%, -50%);
+.coin {
+    position: absolute;
 
-            z-index: 500;
+    width: 30px;
+    height: 38px;
 
-            display: none;
+    border-radius: 50%;
 
-            min-width: 330px;
+    background:
+        linear-gradient(
+            90deg,
+            #b87900,
+            #ffe44a,
+            #fff27a,
+            #e5a900
+        );
 
-            text-align: center;
+    border: 3px solid #a16d00;
 
-            color: white;
+    animation:
+        coinSpin
+        0.7s
+        ease-in-out
+        infinite
+        alternate;
 
-            background: rgba(0, 0, 0, 0.88);
+    z-index: 10;
+}
 
-            padding: 35px;
+@keyframes coinSpin {
+    from {
+        transform: scaleX(1);
+    }
 
-            border-radius: 15px;
+    to {
+        transform: scaleX(0.25);
+    }
+}
 
-            box-shadow:
-                0 20px 50px rgba(0, 0, 0, 0.45);
-        }
+/* =========================================================
+   FLAG
+========================================================= */
 
-        #message h1 {
-            margin-bottom: 12px;
-        }
+.flag-pole {
+    position: absolute;
 
-        #message button {
-            margin-top: 20px;
+    width: 8px;
+    height: 300px;
 
-            padding: 11px 28px;
+    bottom: 90px;
 
-            border: none;
+    background:
+        linear-gradient(
+            to right,
+            #444,
+            #aaa,
+            #444
+        );
+}
 
-            border-radius: 7px;
+.flag {
+    position: absolute;
 
-            font-size: 17px;
+    width: 90px;
+    height: 55px;
 
-            font-weight: bold;
+    left: 8px;
+    top: 10px;
 
-            cursor: pointer;
+    background:
+        linear-gradient(
+            to bottom,
+            #ff4b4b,
+            #c91515
+        );
 
-            background: #ffd21f;
-        }
-    </style>
+    clip-path:
+        polygon(
+            0 0,
+            100% 25%,
+            0 50%
+        );
+}
+
+/* =========================================================
+   HUD
+========================================================= */
+
+#hud {
+    position: fixed;
+
+    top: 20px;
+    left: 20px;
+
+    z-index: 200;
+
+    color: white;
+
+    font-size: 19px;
+    font-weight: 800;
+
+    background:
+        rgba(0,0,0,0.65);
+
+    padding: 12px 18px;
+
+    border-radius: 10px;
+
+    backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   CONTROLS
+========================================================= */
+
+#controls {
+    position: fixed;
+
+    bottom: 20px;
+    left: 20px;
+
+    z-index: 200;
+
+    color: white;
+
+    padding: 10px 15px;
+
+    background:
+        rgba(0,0,0,0.55);
+
+    border-radius: 8px;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+#message {
+    position: fixed;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    z-index: 500;
+
+    display: none;
+
+    min-width: 330px;
+
+    text-align: center;
+
+    color: white;
+
+    background:
+        rgba(0,0,0,0.88);
+
+    padding: 35px;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,0.45);
+}
+
+#message h1 {
+    margin-bottom: 12px;
+}
+
+#message button {
+    margin-top: 20px;
+
+    padding: 11px 28px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    background: #ffd21f;
+}
+</style>
 </head>
+
 
 <body>
 
-    <div id="game">
+<div id="game">
 
-        <!-- HUD -->
+    <!-- =====================================================
+         HUD
+    ====================================================== -->
 
-        <div id="hud">
-            SCORE:
-            <span id="score">0</span>
+    <div id="hud">
 
-            &nbsp;&nbsp; COINS:
-            <span id="coins">0</span>
+        SCORE:
+        <span id="score">0</span>
 
-            &nbsp;&nbsp; LIVES:
-            <span id="lives">3</span>
-        </div>
+        &nbsp;&nbsp;
 
-        <div id="controls">
-            ← → Move &nbsp;&nbsp; ↑ Jump
-        </div>
+        COINS:
+        <span id="coins">0</span>
 
-        <!-- MESSAGE -->
+        &nbsp;&nbsp;
 
-        <div id="message">
-            <h1 id="messageTitle">Game Over</h1>
+        LIVES:
+        <span id="lives">3</span>
 
-            <p id="messageText">
-                Try again!
-            </p>
-
-            <button onclick="restartGame()">
-                Restart
-            </button>
-        </div>
-
-        <!-- WORLD -->
-
-        <div id="world">
-
-            <!-- =================================================
-                 HUMAN PLAYER
-            ================================================== -->
-
-            <div id="player">
-
-                <div class="hair"></div>
-
-                <div class="head">
-                    <div class="eye left"></div>
-                    <div class="eye right"></div>
-                </div>
-
-                <div class="arm left"></div>
-                <div class="arm right"></div>
-
-                <div class="body"></div>
-
-                <div class="pants"></div>
-
-                <div class="leg left"></div>
-                <div class="leg right"></div>
-
-                <div class="shoe left"></div>
-                <div class="shoe right"></div>
-
-            </div>
-
-            <!-- =================================================
-                 CLOUDS
-            ================================================== -->
-
-            <div
-                class="cloud"
-                style="left: 300px; top: 80px">
-            </div>
-
-            <div
-                class="cloud"
-                style="left: 1100px; top: 130px">
-            </div>
-
-            <div
-                class="cloud"
-                style="left: 2100px; top: 70px">
-            </div>
-
-            <div
-                class="cloud"
-                style="left: 3300px; top: 120px">
-            </div>
-
-            <!-- =================================================
-                 GROUND
-            ================================================== -->
-
-            <div class="ground"></div>
-
-            <!-- =================================================
-                 PLATFORMS
-            ================================================== -->
-
-            <div
-                class="platform"
-                style="left: 400px; bottom: 220px; width: 220px">
-            </div>
-
-            <div
-                class="platform"
-                style="left: 800px; bottom: 320px; width: 180px">
-            </div>
-
-            <div
-                class="platform"
-                style="left: 1200px; bottom: 190px; width: 250px">
-            </div>
-
-            <div
-                class="platform"
-                style="left: 1700px; bottom: 280px; width: 200px">
-            </div>
-
-            <div
-                class="platform"
-                style="left: 2300px; bottom: 220px; width: 300px">
-            </div>
-
-            <div
-                class="platform"
-                style="left: 3000px; bottom: 330px; width: 220px">
-            </div>
-
-            <!-- =================================================
-                 BLOCKS
-            ================================================== -->
-
-            <div
-                class="block"
-                style="left: 650px; bottom: 350px">
-                ?
-            </div>
-
-            <div
-                class="block brick"
-                style="left: 702px; bottom: 350px">
-            </div>
-
-            <div
-                class="block"
-                style="left: 754px; bottom: 350px">
-                ?
-            </div>
-
-            <div
-                class="block brick"
-                style="left: 1300px; bottom: 270px">
-            </div>
-
-            <div
-                class="block brick"
-                style="left: 1352px; bottom: 270px">
-            </div>
-
-            <!-- =================================================
-                 PIPES
-            ================================================== -->
-
-            <div
-                class="pipe"
-                style="left: 1500px; height: 140px">
-            </div>
-
-            <div
-                class="pipe"
-                style="left: 2800px; height: 190px">
-            </div>
-
-            <div
-                class="pipe"
-                style="left: 3600px; height: 130px">
-            </div>
-
-            <!-- =================================================
-                 COINS
-            ================================================== -->
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 470px; bottom: 280px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 520px; bottom: 280px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 850px; bottom: 380px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 900px; bottom: 380px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 1250px; bottom: 250px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 1750px; bottom: 340px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 2400px; bottom: 270px">
-            </div>
-
-            <div
-                class="coin"
-                data-coin
-                style="left: 3050px; bottom: 390px">
-            </div>
-
-            <!-- =================================================
-                 ENEMIES
-            ================================================== -->
-
-            <div
-                class="enemy"
-                data-enemy
-                style="left: 1000px; bottom: 90px">
-            </div>
-
-            <div
-                class="enemy"
-                data-enemy
-                style="left: 1600px; bottom: 90px">
-            </div>
-
-            <div
-                class="enemy"
-                data-enemy
-                style="left: 2150px; bottom: 90px">
-            </div>
-
-            <div
-                class="enemy"
-                data-enemy
-                style="left: 2700px; bottom: 90px">
-            </div>
-
-            <div
-                class="enemy"
-                data-enemy
-                style="left: 3400px; bottom: 90px">
-            </div>
-
-            <!-- =================================================
-                 FINISH
-            ================================================== -->
-
-            <div
-                class="flag-pole"
-                style="left: 4400px">
-
-                <div class="flag"></div>
-
-            </div>
-
-        </div>
     </div>
 
-    <script>
 
-        /* =========================================================
-           DOM
-        ========================================================= */
+    <div id="controls">
 
-        const game =
-            document.getElementById("game");
+        ← → Move
+        &nbsp;&nbsp;
+        ↑ / SPACE Jump
 
-        const world =
-            document.getElementById("world");
-
-        const playerElement =
-            document.getElementById("player");
-
-        const scoreElement =
-            document.getElementById("score");
-
-        const coinsElement =
-            document.getElementById("coins");
-
-        const livesElement =
-            document.getElementById("lives");
-
-        const message =
-            document.getElementById("message");
-
-        const messageTitle =
-            document.getElementById("messageTitle");
-
-        const messageText =
-            document.getElementById("messageText");
+    </div>
 
 
-        /* =========================================================
-           PLAYER
-        ========================================================= */
+    <!-- =====================================================
+         GAME MESSAGE
+    ====================================================== -->
 
-        const player = {
+    <div id="message">
 
-            x: 100,
+        <h1 id="messageTitle">
+            GAME OVER
+        </h1>
 
-            y: 0,
+        <p id="messageText">
+            Try again!
+        </p>
 
-            width: 42,
+        <button onclick="restartGame()">
+            Restart
+        </button>
 
-            height: 72,
-
-            velocityX: 0,
-
-            velocityY: 0,
-
-            speed: 7,
-
-            jumpForce: 17,
-
-            gravity: 0.75,
-
-            grounded: false,
-
-            facing: 1
-        };
+    </div>
 
 
-        /* =========================================================
-           GAME VARIABLES
-        ========================================================= */
+    <!-- =====================================================
+         WORLD
+    ====================================================== -->
 
-        let score = 0;
-
-        let coins = 0;
-
-        let lives = 3;
-
-        let gameRunning = true;
-
-        let cameraCurrent = 0;
+    <div id="world">
 
 
-        /* =========================================================
-           INPUT
-        ========================================================= */
+        <!-- =================================================
+             MARIO
+        ================================================== -->
 
-        const keys = {
+        <div id="player">
 
-            left: false,
+            <div class="mario-hat"></div>
 
-            right: false,
+            <div class="mario-head">
 
-            jump: false
-        };
+                <div class="mario-eye"></div>
 
+                <div class="mario-mustache"></div>
 
-        window.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "ArrowLeft" ||
-                    event.key === "ArrowRight" ||
-                    event.key === "ArrowUp"
-                ) {
-                    event.preventDefault();
-                }
+            </div>
 
 
-                if (event.key === "ArrowLeft") {
-
-                    keys.left = true;
-
-                    player.facing = -1;
-                }
+            <div class="mario-body"></div>
 
 
-                if (event.key === "ArrowRight") {
+            <div class="mario-arm left"></div>
 
-                    keys.right = true;
-
-                    player.facing = 1;
-                }
+            <div class="mario-arm right"></div>
 
 
-                if (event.key === "ArrowUp") {
+            <div class="mario-leg left"></div>
 
-                    keys.jump = true;
-                }
+            <div class="mario-leg right"></div>
 
-            }
+
+            <div class="mario-shoe left"></div>
+
+            <div class="mario-shoe right"></div>
+
+        </div>
+
+
+        <!-- =================================================
+             CLOUDS
+        ================================================== -->
+
+        <div
+            class="cloud"
+            style="
+                left:300px;
+                top:80px;
+            ">
+        </div>
+
+
+        <div
+            class="cloud"
+            style="
+                left:1100px;
+                top:130px;
+            ">
+        </div>
+
+
+        <div
+            class="cloud"
+            style="
+                left:2100px;
+                top:70px;
+            ">
+        </div>
+
+
+        <div
+            class="cloud"
+            style="
+                left:3300px;
+                top:120px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             GROUND
+        ================================================== -->
+
+        <div class="ground"></div>
+
+
+        <!-- =================================================
+             PLATFORMS
+        ================================================== -->
+
+        <div
+            class="platform"
+            style="
+                left:400px;
+                bottom:220px;
+                width:220px;
+            ">
+        </div>
+
+
+        <div
+            class="platform"
+            style="
+                left:800px;
+                bottom:320px;
+                width:180px;
+            ">
+        </div>
+
+
+        <div
+            class="platform"
+            style="
+                left:1200px;
+                bottom:190px;
+                width:250px;
+            ">
+        </div>
+
+
+        <div
+            class="platform"
+            style="
+                left:1700px;
+                bottom:280px;
+                width:200px;
+            ">
+        </div>
+
+
+        <div
+            class="platform"
+            style="
+                left:2300px;
+                bottom:220px;
+                width:300px;
+            ">
+        </div>
+
+
+        <div
+            class="platform"
+            style="
+                left:3000px;
+                bottom:330px;
+                width:220px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             BLOCKS
+        ================================================== -->
+
+        <div
+            class="block"
+            style="
+                left:650px;
+                bottom:350px;
+            ">
+            ?
+        </div>
+
+
+        <div
+            class="block brick"
+            style="
+                left:702px;
+                bottom:350px;
+            ">
+        </div>
+
+
+        <div
+            class="block"
+            style="
+                left:754px;
+                bottom:350px;
+            ">
+            ?
+        </div>
+
+
+        <div
+            class="block brick"
+            style="
+                left:1300px;
+                bottom:270px;
+            ">
+        </div>
+
+
+        <div
+            class="block brick"
+            style="
+                left:1352px;
+                bottom:270px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             PIPES
+        ================================================== -->
+
+        <div
+            class="pipe"
+            style="
+                left:1500px;
+                height:140px;
+            ">
+        </div>
+
+
+        <div
+            class="pipe"
+            style="
+                left:2800px;
+                height:190px;
+            ">
+        </div>
+
+
+        <div
+            class="pipe"
+            style="
+                left:3600px;
+                height:130px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             COINS
+        ================================================== -->
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:470px;
+                bottom:280px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:520px;
+                bottom:280px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:850px;
+                bottom:380px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:900px;
+                bottom:380px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:1250px;
+                bottom:250px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:1750px;
+                bottom:340px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:2400px;
+                bottom:270px;
+            ">
+        </div>
+
+
+        <div
+            class="coin"
+            data-coin
+            style="
+                left:3050px;
+                bottom:390px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             ENEMIES
+        ================================================== -->
+
+        <div
+            class="enemy"
+            data-enemy
+            style="
+                left:1000px;
+                bottom:90px;
+            ">
+        </div>
+
+
+        <div
+            class="enemy"
+            data-enemy
+            style="
+                left:1600px;
+                bottom:90px;
+            ">
+        </div>
+
+
+        <div
+            class="enemy"
+            data-enemy
+            style="
+                left:2150px;
+                bottom:90px;
+            ">
+        </div>
+
+
+        <div
+            class="enemy"
+            data-enemy
+            style="
+                left:2700px;
+                bottom:90px;
+            ">
+        </div>
+
+
+        <div
+            class="enemy"
+            data-enemy
+            style="
+                left:3400px;
+                bottom:90px;
+            ">
+        </div>
+
+
+        <!-- =================================================
+             FINISH FLAG
+        ================================================== -->
+
+        <div
+            class="flag-pole"
+            style="
+                left:4400px;
+            ">
+
+            <div class="flag"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const game =
+    document.getElementById("game");
+
+const world =
+    document.getElementById("world");
+
+const playerElement =
+    document.getElementById("player");
+
+const scoreElement =
+    document.getElementById("score");
+
+const coinsElement =
+    document.getElementById("coins");
+
+const livesElement =
+    document.getElementById("lives");
+
+const message =
+    document.getElementById("message");
+
+const messageTitle =
+    document.getElementById("messageTitle");
+
+const messageText =
+    document.getElementById("messageText");
+
+
+/* =========================================================
+   PLAYER
+========================================================= */
+
+const player = {
+
+    x: 100,
+
+    y: 0,
+
+    width: 52,
+
+    height: 105,
+
+    velocityX: 0,
+
+    velocityY: 0,
+
+    speed: 7,
+
+    jumpForce: 17,
+
+    gravity: 0.75,
+
+    grounded: false,
+
+    facing: 1
+};
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let score = 0;
+
+let coins = 0;
+
+let lives = 3;
+
+let gameRunning = true;
+
+let cameraCurrent = 0;
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+const keys = {
+
+    left: false,
+
+    right: false,
+
+    jump: false
+};
+
+
+window.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft" ||
+            event.key === "ArrowRight" ||
+            event.key === "ArrowUp" ||
+            event.code === "Space"
+        ) {
+
+            event.preventDefault();
+        }
+
+
+        if (
+            event.key === "ArrowLeft"
+        ) {
+
+            keys.left = true;
+
+            player.facing = -1;
+        }
+
+
+        if (
+            event.key === "ArrowRight"
+        ) {
+
+            keys.right = true;
+
+            player.facing = 1;
+        }
+
+
+        if (
+            event.key === "ArrowUp" ||
+            event.code === "Space"
+        ) {
+
+            keys.jump = true;
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    function(event) {
+
+        if (
+            event.key === "ArrowLeft"
+        ) {
+
+            keys.left = false;
+        }
+
+
+        if (
+            event.key === "ArrowRight"
+        ) {
+
+            keys.right = false;
+        }
+
+
+        if (
+            event.key === "ArrowUp" ||
+            event.code === "Space"
+        ) {
+
+            keys.jump = false;
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PLAYER RECTANGLE
+========================================================= */
+
+function getPlayerRect() {
+
+    return {
+
+        left: player.x,
+
+        right:
+            player.x +
+            player.width,
+
+        top: player.y,
+
+        bottom:
+            player.y +
+            player.height
+    };
+}
+
+
+/* =========================================================
+   WORLD ELEMENT RECTANGLE
+========================================================= */
+
+function getWorldRect(element) {
+
+    const style =
+        window.getComputedStyle(element);
+
+    const left =
+        parseFloat(style.left) || 0;
+
+    const width =
+        element.offsetWidth;
+
+    const height =
+        element.offsetHeight;
+
+    let top;
+
+
+    if (
+        style.top !== "auto"
+    ) {
+
+        top =
+            parseFloat(style.top);
+
+    } else {
+
+        const bottom =
+            parseFloat(style.bottom) || 0;
+
+        top =
+            game.clientHeight -
+            bottom -
+            height;
+    }
+
+
+    return {
+
+        left: left,
+
+        right:
+            left + width,
+
+        top: top,
+
+        bottom:
+            top + height
+    };
+}
+
+
+/* =========================================================
+   COLLISION
+========================================================= */
+
+function rectanglesOverlap(a, b) {
+
+    return (
+
+        a.left < b.right &&
+
+        a.right > b.left &&
+
+        a.top < b.bottom &&
+
+        a.bottom > b.top
+    );
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+function handleInput() {
+
+    player.velocityX = 0;
+
+
+    if (keys.left) {
+
+        player.velocityX =
+            -player.speed;
+    }
+
+
+    if (keys.right) {
+
+        player.velocityX =
+            player.speed;
+    }
+
+
+    /* Jump */
+
+    if (
+        keys.jump &&
+        player.grounded
+    ) {
+
+        player.velocityY =
+            -player.jumpForce;
+
+        player.grounded = false;
+
+        keys.jump = false;
+
+
+        playerElement.classList.add(
+            "jumping"
         );
 
 
-        window.addEventListener(
-            "keyup",
-            function (event) {
+        setTimeout(
+            function() {
 
-                if (event.key === "ArrowLeft") {
-
-                    keys.left = false;
-                }
-
-
-                if (event.key === "ArrowRight") {
-
-                    keys.right = false;
-                }
-
-
-                if (event.key === "ArrowUp") {
-
-                    keys.jump = false;
-                }
-
-            }
-        );
-
-
-        /* =========================================================
-           PLAYER RECTANGLE
-        ========================================================= */
-
-        function getPlayerRect() {
-
-            return {
-
-                left: player.x,
-
-                right: player.x + player.width,
-
-                top: player.y,
-
-                bottom: player.y + player.height
-            };
-        }
-
-
-        /* =========================================================
-           WORLD RECTANGLE
-        ========================================================= */
-
-        function getWorldRect(element) {
-
-            const style =
-                window.getComputedStyle(element);
-
-            const left =
-                parseFloat(style.left) || 0;
-
-            const width =
-                element.offsetWidth;
-
-            const height =
-                element.offsetHeight;
-
-            let top;
-
-
-            if (style.top !== "auto") {
-
-                top =
-                    parseFloat(style.top);
-
-            } else {
-
-                const bottom =
-                    parseFloat(style.bottom) || 0;
-
-                top =
-                    game.clientHeight -
-                    bottom -
-                    height;
-            }
-
-
-            return {
-
-                left: left,
-
-                right: left + width,
-
-                top: top,
-
-                bottom: top + height
-            };
-        }
-
-
-        /* =========================================================
-           RECTANGLE COLLISION
-        ========================================================= */
-
-        function rectanglesOverlap(a, b) {
-
-            return (
-
-                a.left < b.right &&
-
-                a.right > b.left &&
-
-                a.top < b.bottom &&
-
-                a.bottom > b.top
-            );
-        }
-
-
-        /* =========================================================
-           INPUT
-        ========================================================= */
-
-        function handleInput() {
-
-            player.velocityX = 0;
-
-
-            if (keys.left) {
-
-                player.velocityX =
-                    -player.speed;
-            }
-
-
-            if (keys.right) {
-
-                player.velocityX =
-                    player.speed;
-            }
-
-
-            /* Jump */
-
-            if (
-                keys.jump &&
-                player.grounded
-            ) {
-
-                player.velocityY =
-                    -player.jumpForce;
-
-                player.grounded = false;
-
-                keys.jump = false;
-
-                playerElement.classList.add(
+                playerElement.classList.remove(
                     "jumping"
                 );
 
-
-                setTimeout(() => {
-
-                    playerElement.classList.remove(
-                        "jumping"
-                    );
-
-                }, 200);
-            }
-        }
+            },
+            200
+        );
+    }
+}
 
 
-        /* =========================================================
-           HORIZONTAL MOVEMENT
-        ========================================================= */
+/* =========================================================
+   HORIZONTAL MOVEMENT
+========================================================= */
 
-        function updateHorizontalMovement() {
+function updateHorizontalMovement() {
 
-            player.x += player.velocityX;
-
-
-            if (player.x < 0) {
-
-                player.x = 0;
-            }
+    player.x +=
+        player.velocityX;
 
 
-            const worldWidth = 5000;
+    if (
+        player.x < 0
+    ) {
+
+        player.x = 0;
+    }
+
+
+    if (
+        player.x +
+        player.width >
+        5000
+    ) {
+
+        player.x =
+            5000 -
+            player.width;
+    }
+}
+
+
+/* =========================================================
+   VERTICAL MOVEMENT
+========================================================= */
+
+function updateVerticalMovement() {
+
+    const previousBottom =
+        player.y +
+        player.height;
+
+
+    player.velocityY +=
+        player.gravity;
+
+
+    player.y +=
+        player.velocityY;
+
+
+    player.grounded = false;
+
+
+    /* Ground */
+
+    const groundTop =
+        game.clientHeight -
+        90;
+
+
+    if (
+        player.y +
+        player.height >=
+        groundTop
+    ) {
+
+        player.y =
+            groundTop -
+            player.height;
+
+        player.velocityY = 0;
+
+        player.grounded = true;
+    }
+
+
+    /* Platforms */
+
+    const platforms =
+        document.querySelectorAll(
+            ".platform, .block, .pipe"
+        );
+
+
+    const currentRect =
+        getPlayerRect();
+
+
+    platforms.forEach(
+        function(element) {
+
+            const rect =
+                getWorldRect(element);
+
+
+            const horizontalCollision =
+                currentRect.right >
+                    rect.left &&
+                currentRect.left <
+                    rect.right;
+
+
+            const landing =
+
+                player.velocityY >= 0 &&
+
+                previousBottom <=
+                    rect.top &&
+
+                currentRect.bottom >=
+                    rect.top;
 
 
             if (
-                player.x +
-                player.width >
-                worldWidth
-            ) {
-
-                player.x =
-                    worldWidth -
-                    player.width;
-            }
-        }
-
-
-        /* =========================================================
-           VERTICAL PHYSICS
-        ========================================================= */
-
-        function updateVerticalMovement() {
-
-            const previousBottom =
-                player.y +
-                player.height;
-
-
-            player.velocityY +=
-                player.gravity;
-
-
-            player.y +=
-                player.velocityY;
-
-
-            player.grounded = false;
-
-
-            /* Ground */
-
-            const groundTop =
-                game.clientHeight - 90;
-
-
-            if (
-                player.y +
-                player.height >=
-                groundTop
+                horizontalCollision &&
+                landing
             ) {
 
                 player.y =
-                    groundTop -
+                    rect.top -
                     player.height;
 
                 player.velocityY = 0;
@@ -1437,595 +1836,555 @@
                 player.grounded = true;
             }
 
-
-            /* Platforms / Blocks / Pipes */
-
-            const platforms =
-                document.querySelectorAll(
-                    ".platform, .block, .pipe"
-                );
-
-
-            const currentRect =
-                getPlayerRect();
-
-
-            platforms.forEach(
-                function (element) {
-
-                    const rect =
-                        getWorldRect(element);
-
-
-                    const horizontalCollision =
-                        currentRect.right >
-                            rect.left &&
-                        currentRect.left <
-                            rect.right;
-
-
-                    const landing =
-
-                        player.velocityY >= 0 &&
-
-                        previousBottom <=
-                            rect.top &&
-
-                        currentRect.bottom >=
-                            rect.top;
-
-
-                    if (
-                        horizontalCollision &&
-                        landing
-                    ) {
-
-                        player.y =
-                            rect.top -
-                            player.height;
-
-                        player.velocityY = 0;
-
-                        player.grounded = true;
-                    }
-
-                }
-            );
         }
+    );
+}
 
 
-        /* =========================================================
-           ENEMIES
-        ========================================================= */
+/* =========================================================
+   ENEMIES
+========================================================= */
 
-        function updateEnemies() {
+function updateEnemies() {
 
-            const enemies =
-                document.querySelectorAll(
-                    ".enemy"
-                );
+    const enemies =
+        document.querySelectorAll(
+            ".enemy"
+        );
 
 
-            enemies.forEach(
-                function (enemy) {
-
-                    if (
-                        enemy.dataset.dead ===
-                        "true"
-                    ) {
-                        return;
-                    }
-
-
-                    let x =
-                        parseFloat(
-                            enemy.style.left
-                        );
-
-
-                    let direction =
-                        Number(
-                            enemy.dataset.direction ||
-                            1
-                        );
-
-
-                    if (
-                        !enemy.dataset.startX
-                    ) {
-
-                        enemy.dataset.startX = x;
-                    }
-
-
-                    const startX =
-                        Number(
-                            enemy.dataset.startX
-                        );
-
-
-                    const speed = 1.5;
-
-
-                    x +=
-                        speed *
-                        direction;
-
-
-                    if (
-                        x >
-                        startX + 130
-                    ) {
-
-                        direction = -1;
-                    }
-
-
-                    if (
-                        x <
-                        startX - 130
-                    ) {
-
-                        direction = 1;
-                    }
-
-
-                    enemy.dataset.direction =
-                        direction;
-
-                    enemy.style.left =
-                        x + "px";
-
-                }
-            );
-        }
-
-
-        /* =========================================================
-           ENEMY COLLISION
-        ========================================================= */
-
-        function checkEnemyCollision() {
-
-            const enemies =
-                document.querySelectorAll(
-                    ".enemy"
-                );
-
-
-            const playerRect =
-                getPlayerRect();
-
-
-            enemies.forEach(
-                function (enemy) {
-
-                    if (
-                        enemy.dataset.dead ===
-                        "true"
-                    ) {
-                        return;
-                    }
-
-
-                    const enemyRect =
-                        getWorldRect(enemy);
-
-
-                    if (
-                        rectanglesOverlap(
-                            playerRect,
-                            enemyRect
-                        )
-                    ) {
-
-                        /* Stomp enemy */
-
-                        if (
-
-                            player.velocityY > 0 &&
-
-                            playerRect.bottom -
-                                player.velocityY <=
-                                enemyRect.top + 15
-
-                        ) {
-
-                            killEnemy(enemy);
-
-                        } else {
-
-                            hurtPlayer();
-                        }
-                    }
-
-                }
-            );
-        }
-
-
-        /* =========================================================
-           KILL ENEMY
-        ========================================================= */
-
-        function killEnemy(enemy) {
-
-            enemy.dataset.dead = "true";
-
-            enemy.style.transform =
-                "scaleY(0.25)";
-
-
-            score += 100;
-
-            updateHUD();
-
-
-            setTimeout(
-                function () {
-
-                    enemy.remove();
-
-                },
-                250
-            );
-        }
-
-
-        /* =========================================================
-           DAMAGE
-        ========================================================= */
-
-        function hurtPlayer() {
-
-            if (!gameRunning) {
-
-                return;
-            }
-
-
-            lives--;
-
-            updateHUD();
-
-
-            if (lives <= 0) {
-
-                gameOver();
-
-                return;
-            }
-
-
-            /* Respawn */
-
-            player.x =
-                Math.max(
-                    100,
-                    player.x - 300
-                );
-
-            player.y = 100;
-
-            player.velocityX = 0;
-
-            player.velocityY = 0;
-        }
-
-
-        /* =========================================================
-           COINS
-        ========================================================= */
-
-        function checkCoins() {
-
-            const coinElements =
-                document.querySelectorAll(
-                    "[data-coin]"
-                );
-
-
-            const playerRect =
-                getPlayerRect();
-
-
-            coinElements.forEach(
-                function (coin) {
-
-                    if (
-                        coin.dataset.collected ===
-                        "true"
-                    ) {
-                        return;
-                    }
-
-
-                    const coinRect =
-                        getWorldRect(coin);
-
-
-                    if (
-                        rectanglesOverlap(
-                            playerRect,
-                            coinRect
-                        )
-                    ) {
-
-                        coin.dataset.collected =
-                            "true";
-
-                        coin.style.display =
-                            "none";
-
-
-                        coins++;
-
-                        score += 50;
-
-                        updateHUD();
-                    }
-
-                }
-            );
-        }
-
-
-        /* =========================================================
-           CAMERA
-        ========================================================= */
-
-        function updateCamera() {
-
-            const screenCenter =
-                game.clientWidth / 2;
-
-
-            let targetCamera =
-                player.x -
-                screenCenter;
-
-
-            const maxCamera =
-                5000 -
-                game.clientWidth;
-
-
-            targetCamera =
-                Math.max(
-                    0,
-                    Math.min(
-                        targetCamera,
-                        maxCamera
-                    )
-                );
-
-
-            /* Smooth camera */
-
-            cameraCurrent +=
-                (
-                    targetCamera -
-                    cameraCurrent
-                ) * 0.12;
-
-
-            world.style.transform =
-                `translate3d(
-                    ${-cameraCurrent}px,
-                    0,
-                    0
-                )`;
-        }
-
-
-        /* =========================================================
-           FINISH
-        ========================================================= */
-
-        function checkFinish() {
-
-            if (player.x >= 4350) {
-
-                levelComplete();
-            }
-        }
-
-
-        /* =========================================================
-           HUD
-        ========================================================= */
-
-        function updateHUD() {
-
-            scoreElement.textContent =
-                score;
-
-            coinsElement.textContent =
-                coins;
-
-            livesElement.textContent =
-                lives;
-        }
-
-
-        /* =========================================================
-           RENDER PLAYER
-        ========================================================= */
-
-        function renderPlayer() {
-
-            playerElement.style.left =
-                player.x + "px";
-
-            playerElement.style.top =
-                player.y + "px";
-
-
-            /* Walking animation */
+    enemies.forEach(
+        function(enemy) {
 
             if (
-                player.velocityX !== 0 &&
-                player.grounded
+                enemy.dataset.dead ===
+                "true"
             ) {
-
-                playerElement.classList.add(
-                    "walking"
-                );
-
-            } else {
-
-                playerElement.classList.remove(
-                    "walking"
-                );
-            }
-
-
-            /* Face direction */
-
-            if (
-                player.facing === -1
-            ) {
-
-                playerElement.style.transform =
-                    "scaleX(-1)";
-
-            } else {
-
-                playerElement.style.transform =
-                    "scaleX(1)";
-            }
-        }
-
-
-        /* =========================================================
-           GAME OVER
-        ========================================================= */
-
-        function gameOver() {
-
-            gameRunning = false;
-
-            messageTitle.textContent =
-                "GAME OVER";
-
-            messageText.textContent =
-                "Score: " + score;
-
-            message.style.display =
-                "block";
-        }
-
-
-        /* =========================================================
-           LEVEL COMPLETE
-        ========================================================= */
-
-        function levelComplete() {
-
-            if (!gameRunning) {
 
                 return;
             }
 
 
-            gameRunning = false;
+            let x =
+                parseFloat(
+                    enemy.style.left
+                );
 
 
-            messageTitle.textContent =
-                "LEVEL COMPLETE!";
+            let direction =
+                Number(
+                    enemy.dataset.direction ||
+                    1
+                );
 
 
-            messageText.textContent =
-                "Score: " +
-                score +
-                " | Coins: " +
-                coins;
+            if (
+                !enemy.dataset.startX
+            ) {
 
-
-            message.style.display =
-                "block";
-        }
-
-
-        /* =========================================================
-           RESTART
-        ========================================================= */
-
-        function restartGame() {
-
-            location.reload();
-        }
-
-
-        /* =========================================================
-           UPDATE
-        ========================================================= */
-
-        function update() {
-
-            handleInput();
-
-            updateHorizontalMovement();
-
-            updateVerticalMovement();
-
-            updateEnemies();
-
-            checkEnemyCollision();
-
-            checkCoins();
-
-            checkFinish();
-
-            updateCamera();
-        }
-
-
-        /* =========================================================
-           GAME LOOP
-        ========================================================= */
-
-        function gameLoop() {
-
-            if (gameRunning) {
-
-                update();
-
-                renderPlayer();
+                enemy.dataset.startX =
+                    x;
             }
 
 
-            requestAnimationFrame(
-                gameLoop
-            );
+            const startX =
+                Number(
+                    enemy.dataset.startX
+                );
+
+
+            x +=
+                1.5 *
+                direction;
+
+
+            if (
+                x >
+                startX + 130
+            ) {
+
+                direction = -1;
+            }
+
+
+            if (
+                x <
+                startX - 130
+            ) {
+
+                direction = 1;
+            }
+
+
+            enemy.dataset.direction =
+                direction;
+
+            enemy.style.left =
+                x + "px";
+
         }
+    );
+}
 
 
-        /* =========================================================
-           START
-        ========================================================= */
+/* =========================================================
+   ENEMY COLLISION
+========================================================= */
 
-        function startGame() {
+function checkEnemyCollision() {
 
-            player.y =
-                game.clientHeight -
-                90 -
-                player.height;
-
-
-            player.grounded = true;
+    const enemies =
+        document.querySelectorAll(
+            ".enemy"
+        );
 
 
-            updateHUD();
+    const playerRect =
+        getPlayerRect();
 
-            gameLoop();
+
+    enemies.forEach(
+        function(enemy) {
+
+            if (
+                enemy.dataset.dead ===
+                "true"
+            ) {
+
+                return;
+            }
+
+
+            const enemyRect =
+                getWorldRect(enemy);
+
+
+            if (
+                rectanglesOverlap(
+                    playerRect,
+                    enemyRect
+                )
+            ) {
+
+                /* Stomp */
+
+                if (
+                    player.velocityY > 0 &&
+                    playerRect.bottom -
+                    player.velocityY <=
+                    enemyRect.top + 15
+                ) {
+
+                    killEnemy(enemy);
+
+                } else {
+
+                    hurtPlayer();
+                }
+            }
+
         }
+    );
+}
 
 
-        startGame();
+/* =========================================================
+   KILL ENEMY
+========================================================= */
 
-    </script>
+function killEnemy(enemy) {
+
+    enemy.dataset.dead =
+        "true";
+
+    enemy.style.transform =
+        "scaleY(0.25)";
+
+
+    score += 100;
+
+    updateHUD();
+
+
+    setTimeout(
+        function() {
+
+            enemy.remove();
+
+        },
+        250
+    );
+}
+
+
+/* =========================================================
+   PLAYER DAMAGE
+========================================================= */
+
+function hurtPlayer() {
+
+    if (!gameRunning) {
+
+        return;
+    }
+
+
+    lives--;
+
+    updateHUD();
+
+
+    if (
+        lives <= 0
+    ) {
+
+        gameOver();
+
+        return;
+    }
+
+
+    player.x =
+        Math.max(
+            100,
+            player.x - 300
+        );
+
+
+    player.y = 100;
+
+    player.velocityX = 0;
+
+    player.velocityY = 0;
+}
+
+
+/* =========================================================
+   COINS
+========================================================= */
+
+function checkCoins() {
+
+    const coinElements =
+        document.querySelectorAll(
+            "[data-coin]"
+        );
+
+
+    const playerRect =
+        getPlayerRect();
+
+
+    coinElements.forEach(
+        function(coin) {
+
+            if (
+                coin.dataset.collected ===
+                "true"
+            ) {
+
+                return;
+            }
+
+
+            const coinRect =
+                getWorldRect(coin);
+
+
+            if (
+                rectanglesOverlap(
+                    playerRect,
+                    coinRect
+                )
+            ) {
+
+                coin.dataset.collected =
+                    "true";
+
+                coin.style.display =
+                    "none";
+
+
+                coins++;
+
+                score += 50;
+
+                updateHUD();
+            }
+
+        }
+    );
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera() {
+
+    const screenCenter =
+        game.clientWidth / 2;
+
+
+    let targetCamera =
+        player.x -
+        screenCenter;
+
+
+    const maxCamera =
+        Math.max(
+            0,
+            5000 -
+            game.clientWidth
+        );
+
+
+    targetCamera =
+        Math.max(
+            0,
+            Math.min(
+                targetCamera,
+                maxCamera
+            )
+        );
+
+
+    cameraCurrent +=
+        (
+            targetCamera -
+            cameraCurrent
+        ) * 0.12;
+
+
+    world.style.transform =
+        `translate3d(
+            ${-cameraCurrent}px,
+            0,
+            0
+        )`;
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+function checkFinish() {
+
+    if (
+        player.x >= 4350
+    ) {
+
+        levelComplete();
+    }
+}
+
+
+/* =========================================================
+   HUD
+========================================================= */
+
+function updateHUD() {
+
+    scoreElement.textContent =
+        score;
+
+    coinsElement.textContent =
+        coins;
+
+    livesElement.textContent =
+        lives;
+}
+
+
+/* =========================================================
+   RENDER MARIO
+========================================================= */
+
+function renderPlayer() {
+
+    playerElement.style.left =
+        player.x + "px";
+
+    playerElement.style.top =
+        player.y + "px";
+
+
+    /*
+       Direction
+    */
+
+    if (
+        player.facing === -1
+    ) {
+
+        playerElement.style.transform =
+            "scaleX(-1)";
+
+    } else {
+
+        playerElement.style.transform =
+            "scaleX(1)";
+    }
+
+
+    /*
+       Walking
+    */
+
+    if (
+        player.velocityX !== 0 &&
+        player.grounded
+    ) {
+
+        playerElement.classList.add(
+            "walking"
+        );
+
+    } else {
+
+        playerElement.classList.remove(
+            "walking"
+        );
+    }
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function gameOver() {
+
+    gameRunning = false;
+
+
+    messageTitle.textContent =
+        "GAME OVER";
+
+
+    messageText.textContent =
+        "Score: " +
+        score;
+
+
+    message.style.display =
+        "block";
+}
+
+
+/* =========================================================
+   LEVEL COMPLETE
+========================================================= */
+
+function levelComplete() {
+
+    if (!gameRunning) {
+
+        return;
+    }
+
+
+    gameRunning = false;
+
+
+    messageTitle.textContent =
+        "LEVEL COMPLETE!";
+
+
+    messageText.textContent =
+        "Score: " +
+        score +
+        " | Coins: " +
+        coins;
+
+
+    message.style.display =
+        "block";
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+function restartGame() {
+
+    location.reload();
+}
+
+
+/* =========================================================
+   UPDATE
+========================================================= */
+
+function update() {
+
+    handleInput();
+
+    updateHorizontalMovement();
+
+    updateVerticalMovement();
+
+    updateEnemies();
+
+    checkEnemyCollision();
+
+    checkCoins();
+
+    checkFinish();
+
+    updateCamera();
+
+    renderPlayer();
+}
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+function gameLoop() {
+
+    if (gameRunning) {
+
+        update();
+    }
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+function startGame() {
+
+    player.y =
+        game.clientHeight -
+        90 -
+        player.height;
+
+
+    player.grounded = true;
+
+
+    updateHUD();
+
+    renderPlayer();
+
+    gameLoop();
+}
+
+
+startGame();
+
+</script>
 
 </body>
-
 </html>
